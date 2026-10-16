@@ -95,7 +95,7 @@
        4. HERO — diseño de Lovable: imagen a sangre, gradiente
           lateral, contenido centrado y barra inferior
        ========================================================== */
-    #inicio { min-height: 720px; height: 100svh; }
+    #inicio { min-height: 720px; height: 100dvh; }
     #inicio::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
                       background: linear-gradient(90deg, rgba(4,20,31,.72), rgba(4,20,31,.27) 55%, rgba(4,20,31,.08)); }
     .hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
@@ -573,7 +573,7 @@
               <!-- 📸 REEMPLAZAR: foto real de la planta / equipo de trabajo -->
               <img loading="lazy" decoding="async" src="MADRID 2.webp" alt="Caída de agua entre vegetación, símbolo del origen natural del agua Monte Elías" class="aspect-[4/5] w-full object-cover transition duration-700 ease-smooth hover:scale-105" />
             </div>
-            <div class="noise absolute -bottom-10 -left-6 w-1/2 overflow-hidden rounded-3xl shadow-lift ring-8 ring-cream sm:-left-10">
+            <div class="noise absolute -bottom-10 left-1/2 z-10 w-1/2 -translate-x-1/2 overflow-hidden rounded-3xl shadow-lift ring-8 ring-cream sm:-left-10 sm:translate-x-0">
               <!-- 📸 REEMPLAZAR: foto real del reparto o del botellón en un hogar -->
               <img loading="lazy" decoding="async" src="MADRID 1.jpg" alt="Agua tranquila de laguna andina al atardecer" class="aspect-square w-full object-cover" />
             </div>
