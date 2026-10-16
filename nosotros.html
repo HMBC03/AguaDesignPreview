@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiénes Somos — Agua Monte Elías</title>
+  <meta name="description" content="Conoce Agua Monte Elías: alta tecnología de purificación con rayos UV, 18 años de experiencia, nuestra misión y visión como marca colombiana de agua pura." />
+  <meta name="theme-color" content="#0B2A3C" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+  <!-- ============ TIPOGRAFÍAS: Fraunces (display serif) + DM Sans (cuerpo) ============ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=DM+Sans:opsz,wght@9..40,300..700&display=swap" rel="stylesheet" />
+
+  <!-- ============ TAILWIND CDN + CONFIGURACIÓN DE MARCA ============ -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            deep:    { 950:'#04141F', 900:'#0B2A3C', 800:'#123A50', 700:'#1C4A64', 600:'#2A5F7C' },
+            glacier: { 50:'#F0F7F9', 100:'#E1EEF2', 200:'#C6DFE8', 300:'#A3CBD9', 400:'#7FB2C6' },
+            aqua:    { 200:'#BFE3DD', 300:'#9AD2CA', 400:'#77BDB4', 500:'#5AA79D', 600:'#468C82', 700:'#2F6B62' },
+            cream:   { DEFAULT:'#F7F5F0', 50:'#FBFAF7', 100:'#F1EDE4', 200:'#E7E0D2' },
+            sand:    { 200:'#E7D9BF', 300:'#D6C09A', 400:'#C2A578', 500:'#A98B5C' }
+          },
+          fontFamily: {
+            display: ['Fraunces', 'Georgia', 'serif'],
+            sans: ['"DM Sans"', 'system-ui', 'sans-serif']
+          },
+          boxShadow: {
+            card: '0 10px 40px -12px rgba(11,42,60,0.16)',
+            soft: '0 20px 60px -20px rgba(11,42,60,0.25)',
+            lift: '0 32px 90px -24px rgba(11,42,60,0.38)'
+          },
+          transitionTimingFunction: { smooth: 'cubic-bezier(0.22, 1, 0.36, 1)' }
+        }
+      }
+    };
+  </script>
+
+  <!-- ============ ICONOS: Font Awesome 6 ============ -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer" />
+
+  <style>
+    /* ==========================================================
+       1. BASE, ACCESIBILIDAD Y MOVIMIENTO REDUCIDO
+       ========================================================== */
+    :root { --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1); }
+    html  { scroll-padding-top: 96px; }
+    ::selection { background: #77BDB4; color: #04141F; }
+    :focus-visible { outline: 2px solid #5AA79D; outline-offset: 3px; border-radius: 2px; }
+
+    /* ==========================================================
+       2. GRANO EDITORIAL — utilidad .noise (SVG feTurbulence)
+       ========================================================== */
+    .noise { position: relative; }
+    .noise::after {
+      content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+      opacity: .12; mix-blend-mode: soft-light;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 240px 240px;
+    }
+    .noise-soft::after   { opacity: .08; }
+    .noise-strong::after { opacity: .16; }
+
+    /* ==========================================================
+       3. HEADER — transparente sobre el hero, fijo con fondo
+          crema al hacer scroll (dos estados)
+       ========================================================== */
+    #site-header { position: absolute; top: 0; left: 0; right: 0; z-index: 50; width: 100%;
+                   color: #F7F5F0; border-bottom: 1px solid rgba(247,245,240,.22);
+                   transition: background .3s var(--ease-smooth); }
+    #site-header.is-scrolled { position: fixed; color: #0B2A3C; background: rgba(247,245,240,.94);
+                   border-color: rgba(11,42,60,.12);
+                   backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+    .desktop-nav a { position: relative; padding-block: 12px; }
+    .desktop-nav a::after { content:""; position:absolute; bottom:3px; left:0; width:0; height:1px;
+                            background: currentColor; transition: width .3s var(--ease-smooth); }
+    .desktop-nav a:hover::after, .desktop-nav a:first-child::after { width: 100%; }
+    .header-icon { border-radius: 50%; transition: background .3s var(--ease-smooth); }
+    .header-icon:hover { background: color-mix(in srgb, currentColor 10%, transparent); }
+    .cart-count { position: absolute; top: 0; right: -1px; width: 17px; height: 17px;
+                  display: grid; place-items: center; border-radius: 50%;
+                  background: #F7F5F0; color: #0B2A3C; font-size: 10px; font-weight: 500; }
+    #site-header.is-scrolled .cart-count { background: #0B2A3C; color: #F7F5F0; }
+    .cart-count.hidden { display: none; }
+
+    /* ==========================================================
+       4. HERO — imagen a sangre, gradiente lateral, contenido
+          centrado y barra inferior
+       ========================================================== */
+    #inicio { min-height: 720px; height: calc(100svh - 85px); max-height: 960px; }
+    #inicio::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+                      background: linear-gradient(90deg, rgba(4,20,31,.72), rgba(4,20,31,.27) 55%, rgba(4,20,31,.08)); }
+    .hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .hero-content { position: relative; z-index: 3; display: flex; height: 100%;
+                    flex-direction: column; justify-content: center; padding-top: 100px; }
+    .hero-title { font-size: 88px; line-height: 1.02; max-width: 700px; margin-bottom: 26px; color: #F7F5F0; }
+    .hero-title em { font-weight: 400; font-style: italic; }
+    .hero-copy { max-width: 410px; font-size: 15px; line-height: 1.9; color: rgba(247,245,240,.85); }
+    .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-top: 35px; }
+    .hero-actions a { display: inline-flex; align-items: center; gap: 12px; height: 49px; padding-inline: 25px;
+                      border-radius: 9999px; font-size: 12px; font-weight: 600; letter-spacing: .4px;
+                      transition: background .3s var(--ease-smooth), border-color .3s var(--ease-smooth); }
+    .btn-hero { background: #F7F5F0; color: #0B2A3C; }
+    .btn-hero:hover { background: #DBECE8; }
+    .btn-glass { border: 1px solid rgba(247,245,240,.5); color: #F7F5F0; }
+    .btn-glass:hover { background: rgba(247,245,240,.1); }
+    .hero-bottom { position: absolute; left: 0; right: 0; bottom: 32px; z-index: 3; color: rgba(247,245,240,.85); }
+    .scroll-note { display: inline-flex; align-items: center; gap: 12px;
+                   font-size: 9px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+                   transition: color .3s var(--ease-smooth); }
+    .scroll-note:hover { color: #F7F5F0; }
+    .origin-note { display: inline-flex; align-items: center; gap: 9px; font-size: 10px; letter-spacing: .06em; }
+
+    @media (max-width: 1024px) { .hero-title { font-size: 76px; } }
+    @media (max-width: 767px) {
+      #inicio { height: calc(100svh - 40px); min-height: 640px; max-height: 850px; }
+      #inicio::before { background: linear-gradient(90deg, rgba(4,20,31,.78), rgba(4,20,31,.30)); }
+      .hero-img { object-position: 64% center; }
+      .hero-content { padding-top: 60px; }
+      .hero-title { font-size: 60px; }
+      .hero-copy { max-width: 315px; font-size: 13px; }
+      .hero-actions { gap: 10px; }
+      .hero-actions a { height: 46px; padding-inline: 18px; font-size: 11px; }
+      .hero-bottom { bottom: 28px; }
+      .origin-note { display: none; }
+    }
+
+    /* ==========================================================
+       5. ANIMACIONES DE ENTRADA
+       ========================================================== */
+    [data-reveal] { opacity: 0; transform: translateY(28px);
+                    transition: opacity .8s var(--ease-smooth), transform .8s var(--ease-smooth); }
+    [data-reveal].is-visible { opacity: 1; transform: none; }
+
+    /* ==========================================================
+       6. MICRODETALLES: pops, campos, gráfica lineal
+       ========================================================== */
+    @keyframes pop { from { transform: scale(.5); } to { transform: scale(1); } }
+    .badge-pop { animation: pop .35s var(--ease-smooth); }
+
+    @keyframes fadeUp { from { opacity:0; transform: translateY(18px); } to { opacity:1; transform:none; } }
+    .pop-in { animation: fadeUp .6s var(--ease-smooth) both; }
+
+    /* Gráfica lineal animada (x / y) */
+    .line-path { stroke-dasharray: 1; stroke-dashoffset: 1;
+                 transition: stroke-dashoffset 2s var(--ease-smooth) .2s; }
+    [data-reveal].is-visible .line-path { stroke-dashoffset: 0; }
+    .area-fill { opacity: 0; transition: opacity 1.2s var(--ease-smooth) 1s; }
+    [data-reveal].is-visible .area-fill { opacity: 1; }
+    .dot { opacity: 0; transition: opacity .4s var(--ease-smooth); }
+    [data-reveal].is-visible .dot { opacity: 1; }
+
+    /* ==========================================================
+       7. MOVIMIENTO REDUCIDO
+       ========================================================== */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+      html { scroll-behavior: auto; }
+      [data-reveal] { opacity:1; transform:none; }
+    }
+  </style>
+</head>
+
+<body class="bg-cream font-sans text-deep-900 antialiased">
+
+  <!-- Salto de accesibilidad -->
+  <a href="#contenido" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[90] focus:rounded-full focus:bg-deep-900 focus:px-5 focus:py-3 focus:text-cream">Saltar al contenido</a>
+
+  <!-- ==========================================================
+       HEADER — transparente sobre el hero, fijo con fondo crema
+       al hacer scroll
+       ========================================================== -->
+  <header id="site-header">
+    <div class="mx-auto flex h-[84px] max-w-7xl items-center justify-between gap-[18px] px-5 sm:px-8 md:h-[106px] lg:gap-8">
+
+      <!-- Marca -->
+      <a href="index.html" class="flex shrink-0 items-center gap-3" aria-label="Agua Monte Elías — inicio">
+        <svg viewBox="0 0 60 50" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" class="h-[37px] w-[39px] shrink-0 md:h-[47px] md:w-[49px]" aria-hidden="true">
+          <path d="m3 35 18-27 12 19 9-13 15 21M14 35h32M16 16l5 5 5-5M9 42c7-4 13 4 20 0s13 4 21 0"/>
+        </svg>
+        <span class="leading-none">
+          <span class="block font-display text-[23px] font-medium leading-none lg:text-[25px]">Monte Elías</span>
+          <span class="mt-2 block text-[8px] font-medium uppercase tracking-[3px]">Agua 100% natural</span>
+        </span>
+      </a>
+
+      <!-- Navegación escritorio -->
+      <nav class="desktop-nav hidden items-center gap-5 text-[13px] md:flex lg:gap-[31px]" aria-label="Navegación principal">
+        <a href="index.html">Inicio</a>
+        <a href="nosotros.html" aria-current="page">Nosotros</a>
+        <a href="index.html#productos">Productos</a>
+        <a href="index.html#contacto">Contacto</a>
+      </nav>
+
+      <!-- Acciones -->
+      <div class="flex items-center gap-1 md:gap-3">
+        <a href="#" class="header-icon hidden h-9 w-9 place-items-center sm:grid" aria-label="Mi cuenta">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-[19px] w-[19px]" aria-hidden="true"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
+        </a>
+        <button id="cartBtn" class="header-icon relative grid h-9 w-9 place-items-center" aria-label="Abrir carrito de compras">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-[19px] w-[19px]" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span id="cartCount" class="cart-count badge-pop hidden">0</span>
+        </button>
+        <button id="menuBtn" class="header-icon grid h-9 w-9 place-items-center md:hidden" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="h-[22px] w-[22px]" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Menú móvil (drawer derecho) -->
+  <div id="menuOverlay" class="pointer-events-none fixed inset-0 z-[55] bg-deep-950/60 opacity-0 transition-opacity duration-500" aria-hidden="true"></div>
+  <nav id="mobileMenu" class="noise fixed inset-y-0 right-0 z-[56] flex w-[86%] max-w-sm translate-x-full flex-col bg-deep-950 px-8 py-8 transition-transform duration-500 ease-smooth" aria-label="Navegación móvil">
+    <div class="flex items-center justify-between">
+      <span class="text-[0.6rem] font-semibold uppercase tracking-[0.34em] text-glacier-300">Menú</span>
+      <button id="menuClose" class="rounded-full border border-cream/15 p-2.5 text-cream transition hover:bg-cream/10" aria-label="Cerrar menú">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" class="h-5 w-5" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <ul class="mt-12 space-y-7 font-display text-3xl tracking-tight text-cream">
+      <li><a href="index.html"     class="mobile-link block transition hover:text-aqua-300">Inicio</a></li>
+      <li><a href="nosotros.html"  class="mobile-link block transition hover:text-aqua-300">Nosotros</a></li>
+      <li><a href="index.html#productos" class="mobile-link block transition hover:text-aqua-300">Productos</a></li>
+      <li><a href="index.html#contacto"  class="mobile-link block transition hover:text-aqua-300">Contacto</a></li>
+    </ul>
+    <p class="mt-auto text-sm leading-relaxed text-glacier-300">Agua Monte Elías, purifica tu cuerpo.<br/>Madrid, Cundinamarca · Bogotá y Sabana.</p>
+  </nav>
+
+  <main id="contenido">
+
+    <!-- ==========================================================
+         1. HERO — gradiente lateral, contenido centrado y barra
+            inferior
+         ========================================================== -->
+    <section id="inicio" class="noise relative overflow-hidden bg-deep-950">
+      <!-- 📸 REEMPLAZAR: foto real del manantial / planta / montaña de la marca (ideal 2400px, WebP/AVIF) -->
+      <img src="spring-hero-D8DOBCI5.jpg"
+           alt="Cascada en plena montaña, origen simbólico del agua Monte Elías"
+           width="1920" height="1024"
+           class="hero-img" fetchpriority="high" />
+
+      <div class="hero-content mx-auto w-full max-w-7xl px-5 sm:px-8" data-reveal>
+        <h1 class="hero-title font-display font-medium tracking-tight">
+          Quiénes <em>Somos</em>
+        </h1>
+        <p class="hero-copy">
+          Una marca nacida en Madrid, Cundinamarca: alta tecnología de purificación
+          al servicio del agua más pura de Colombia.
+        </p>
+        <div class="hero-actions">
+          <a href="index.html#productos" class="btn-hero">
+            Ver productos
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+          <a href="index.html#contacto" class="btn-glass">
+            Contáctanos
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-bottom">
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-5 sm:px-8">
+          <a href="index.html#productos" class="scroll-note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-[15px] w-[15px]" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+            Descubre nuestra esencia
+          </a>
+          <span class="origin-note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-[15px] w-[15px]" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            Hecha en Colombia. Pensada para ti.
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         01 — QUIÉNES SOMOS / AGUA MONTE ELÍAS
+         ========================================================== -->
+    <section class="bg-cream py-24 md:py-36" aria-labelledby="quienes-title">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8">
+        <div class="grid items-start gap-14 lg:grid-cols-12 lg:gap-16">
+
+          <!-- Texto -->
+          <div class="lg:col-span-7" data-reveal>
+            <p class="text-[0.68rem] font-semibold uppercase tracking-[0.32em] text-aqua-700">01 — Quiénes somos</p>
+            <h2 id="quienes-title" class="mt-5 font-display text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+              Agua <em class="font-light italic text-aqua-700">Monte Elías</em>
+            </h2>
+            <span class="mt-7 flex items-center gap-3" aria-hidden="true"><span class="h-px w-14 bg-sand-400"></span><span class="h-1.5 w-1.5 rounded-full bg-aqua-500"></span></span>
+
+            <p class="mt-8 text-base leading-relaxed text-deep-700/90 sm:text-lg">
+              Es el resultado de la aplicación de alta tecnología sobre un moderno y exigente
+              proceso de purificación mediante rayos UV, diversos filtros carbón activado, arena,
+              gravilla, antracita e intercambiadores de iones, removiendo el 98% de sólidos disueltos.
+              Las características fisicoquímicas microbiológicas y organoeléctricas del producto,
+              hacen de esta agua una bebida de la más alta calidad.
+            </p>
+
+            <!-- Etapas del proceso -->
+            <ul class="mt-10 flex flex-wrap gap-3" aria-label="Etapas del proceso de purificación">
+              <li class="inline-flex items-center gap-2.5 rounded-full border border-deep-900/10 bg-white px-4 py-2.5 text-sm font-medium text-deep-800 shadow-card" data-reveal><i class="fa-solid fa-sun text-aqua-600" aria-hidden="true"></i> Rayos UV</li>
+              <li class="inline-flex items-center gap-2.5 rounded-full border border-deep-900/10 bg-white px-4 py-2.5 text-sm font-medium text-deep-800 shadow-card" data-reveal style="transition-delay:.06s"><i class="fa-solid fa-filter text-aqua-600" aria-hidden="true"></i> Filtros de carbón activado</li>
+              <li class="inline-flex items-center gap-2.5 rounded-full border border-deep-900/10 bg-white px-4 py-2.5 text-sm font-medium text-deep-800 shadow-card" data-reveal style="transition-delay:.12s"><i class="fa-solid fa-layer-group text-aqua-600" aria-hidden="true"></i> Arena y gravilla</li>
+              <li class="inline-flex items-center gap-2.5 rounded-full border border-deep-900/10 bg-white px-4 py-2.5 text-sm font-medium text-deep-800 shadow-card" data-reveal style="transition-delay:.18s"><i class="fa-solid fa-mountain text-aqua-600" aria-hidden="true"></i> Antracita</li>
+              <li class="inline-flex items-center gap-2.5 rounded-full border border-deep-900/10 bg-white px-4 py-2.5 text-sm font-medium text-deep-800 shadow-card" data-reveal style="transition-delay:.24s"><i class="fa-solid fa-atom text-aqua-600" aria-hidden="true"></i> Intercambiadores de iones</li>
+            </ul>
+          </div>
+
+          <!-- Gráfica lineal: % de sólidos disueltos removidos por lote -->
+          <div class="lg:col-span-5" data-reveal style="transition-delay:.15s">
+            <div class="noise noise-strong overflow-hidden rounded-3xl bg-deep-950 p-9 text-cream shadow-lift sm:p-11">
+              <div class="flex items-center justify-between gap-4">
+                <span class="inline-flex rounded-full border border-aqua-600/30 bg-aqua-500/15 p-4 text-aqua-300">
+                  <i class="fa-solid fa-flask text-2xl" aria-hidden="true"></i>
+                </span>
+                <p class="text-right font-display text-4xl font-semibold leading-none tracking-tight">
+                  <span data-count="98">0</span><span class="text-aqua-400">%</span>
+                  <span class="mt-1 block font-sans text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-glacier-400">removidos</span>
+                </p>
+              </div>
+
+              <!-- Gráfica lineal x / y -->
+              <div class="mt-8" role="img" aria-label="Gráfica lineal: sólidos disueltos removidos por lote, alcanzando 98%">
+                <svg viewBox="0 0 320 190" class="h-auto w-full" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#77BDB4" stop-opacity=".45" />
+                      <stop offset="100%" stop-color="#77BDB4" stop-opacity="0" />
+                    </linearGradient>
+                  </defs>
+
+                  <!-- Rejilla horizontal -->
+                  <g stroke="rgba(154,210,202,.14)" stroke-width="1" stroke-dasharray="3 5">
+                    <line x1="55" y1="25"    x2="295" y2="25" />
+                    <line x1="55" y1="66.7"  x2="295" y2="66.7" />
+                    <line x1="55" y1="108.3" x2="295" y2="108.3" />
+                  </g>
+
+                  <!-- Ejes -->
+                  <line x1="55" y1="25"  x2="55"  y2="150" stroke="#A3CBD9" stroke-opacity=".5" stroke-width="1" />
+                  <line x1="55" y1="150" x2="295" y2="150" stroke="#A3CBD9" stroke-opacity=".5" stroke-width="1" />
+
+                  <!-- Área bajo la curva -->
+                  <path class="area-fill" d="M55,108.3 L115,83.3 L175,66.7 L235,50 L295,41.7 L295,150 L55,150 Z" fill="url(#areaGrad)" />
+
+                  <!-- Línea -->
+                  <path class="line-path" d="M55,108.3 L115,83.3 L175,66.7 L235,50 L295,41.7" pathLength="1"
+                        fill="none" stroke="#77BDB4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+
+                  <!-- Puntos -->
+                  <g fill="#BFE3DD" stroke="#04141F" stroke-width="1.5">
+                    <circle class="dot" style="transition-delay:.3s"  cx="55"  cy="108.3" r="3.5" />
+                    <circle class="dot" style="transition-delay:.6s"  cx="115" cy="83.3"  r="3.5" />
+                    <circle class="dot" style="transition-delay:.9s"  cx="175" cy="66.7"  r="3.5" />
+                    <circle class="dot" style="transition-delay:1.2s" cx="235" cy="50"    r="3.5" />
+                    <circle class="dot" style="transition-delay:1.5s" cx="295" cy="41.7"  r="4.5" />
+                  </g>
+
+                  <!-- Etiquetas eje Y -->
+                  <g fill="#7FB2C6" font-size="9" text-anchor="end" font-family="'DM Sans', sans-serif">
+                    <text x="48" y="28">100%</text>
+                    <text x="48" y="69.7">95%</text>
+                    <text x="48" y="111.3">90%</text>
+                    <text x="48" y="153">85%</text>
+                  </g>
+
+                  <!-- Etiquetas eje X -->
+                  <g fill="#7FB2C6" font-size="9" text-anchor="middle" font-family="'DM Sans', sans-serif">
+                    <text x="55"  y="166">1</text>
+                    <text x="115" y="166">2</text>
+                    <text x="175" y="166">3</text>
+                    <text x="235" y="166">4</text>
+                    <text x="295" y="166">5</text>
+                  </g>
+                </svg>
+              </div>
+
+              <p class="mt-6 text-sm leading-relaxed text-glacier-300">
+                Sólidos disueltos removidos en cada lote, gracias a un proceso
+                moderno y exigente de purificación.
+              </p>
+
+              <span class="mt-8 flex items-center gap-3" aria-hidden="true"><span class="h-px w-14 bg-sand-400/70"></span><span class="h-1.5 w-1.5 rounded-full bg-aqua-400"></span></span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         02 — INVERSIONES MONTE ELÍAS
+         ========================================================== -->
+    <section class="noise noise-strong relative overflow-hidden bg-deep-950 py-24 text-cream md:py-36" aria-labelledby="inversiones-title">
+      <div class="relative z-10 mx-auto max-w-7xl px-5 sm:px-8">
+
+        <div class="max-w-3xl" data-reveal>
+          <p class="text-[0.68rem] font-semibold uppercase tracking-[0.32em] text-aqua-300">02 — Nuestra empresa</p>
+          <h2 id="inversiones-title" class="mt-5 font-display text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+            Inversiones <em class="font-light italic text-aqua-300">Monte Elías</em>
+          </h2>
+          <span class="mt-7 flex items-center gap-3" aria-hidden="true"><span class="h-px w-14 bg-sand-400"></span><span class="h-1.5 w-1.5 rounded-full bg-aqua-400"></span></span>
+
+          <p class="mt-8 text-base leading-relaxed text-glacier-200 sm:text-lg">
+            Incursionamos en el mercado hace 18 años ofreciendo a nuestros consumidores agua
+            con un alto grado de pureza, contamos con altos estándares de calidad y estrictos
+            proceso de control. Nuestro proceso de expansión hace que hoy contemos con
+            diferentes lineas de bebidas, deliciosas, saludables y al alcance de todos.
+          </p>
+        </div>
+
+        <div class="mt-14 grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
+          <!-- Card redondo: años de experiencia -->
+          <div class="lg:col-span-4" data-reveal>
+            <div class="relative mx-auto flex aspect-square w-full max-w-[17rem] flex-col items-center justify-center overflow-hidden rounded-full border border-aqua-600/30 bg-aqua-500/10 p-8 text-center shadow-lift">
+              <span class="inline-flex rounded-full border border-aqua-600/30 bg-aqua-500/15 p-3.5 text-aqua-300"><i class="fa-solid fa-calendar-days text-xl" aria-hidden="true"></i></span>
+              <p class="mt-4 font-display text-6xl font-semibold leading-none tracking-tight"><span data-count="18">0</span></p>
+              <p class="mt-2 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-aqua-300">años</p>
+              <p class="mt-3 max-w-[22ch] text-xs leading-relaxed text-glacier-300">Sirviendo agua con un alto grado de pureza.</p>
+            </div>
+          </div>
+
+          <!-- Otras cualidades, en formato lista -->
+          <div class="lg:col-span-8" data-reveal style="transition-delay:.12s">
+            <ul class="divide-y divide-cream/10 border-y border-cream/10">
+              <li>
+                <div class="flex items-start gap-5 py-7">
+                  <span class="mt-0.5 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-aqua-500/15 text-aqua-300"><i class="fa-solid fa-certificate text-lg" aria-hidden="true"></i></span>
+                  <div>
+                    <h3 class="font-display text-xl font-semibold tracking-tight">Estándares altos</h3>
+                    <p class="mt-1.5 text-sm leading-relaxed text-glacier-300">Altos estándares de calidad en cada etapa de producción y embotellamiento.</p>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="flex items-start gap-5 py-7">
+                  <span class="mt-0.5 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-aqua-500/15 text-aqua-300"><i class="fa-solid fa-clipboard-check text-lg" aria-hidden="true"></i></span>
+                  <div>
+                    <h3 class="font-display text-xl font-semibold tracking-tight">Control estricto</h3>
+                    <p class="mt-1.5 text-sm leading-relaxed text-glacier-300">Estrictos procesos de control que garantizan consistencia y confianza.</p>
+                  </div>
+                </div>
+              </li>
+              <li>
+                <div class="flex items-start gap-5 py-7">
+                  <span class="mt-0.5 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-aqua-500/15 text-aqua-300"><i class="fa-solid fa-bottle-water text-lg" aria-hidden="true"></i></span>
+                  <div>
+                    <h3 class="font-display text-xl font-semibold tracking-tight">Líneas de bebidas</h3>
+                    <p class="mt-1.5 text-sm leading-relaxed text-glacier-300">Diferentes líneas de bebidas, deliciosas, saludables y al alcance de todos.</p>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         03 — MISIÓN
+         ========================================================== -->
+    <section class="bg-cream py-24 md:py-36" aria-labelledby="mision-title">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8">
+        <div class="grid items-center gap-14 lg:grid-cols-12 lg:gap-16">
+
+          <!-- Icono / sello -->
+          <div class="lg:col-span-4" data-reveal>
+            <div class="noise relative overflow-hidden rounded-3xl bg-aqua-200/50 p-10 text-center shadow-card sm:p-12">
+              <span class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-deep-950 text-aqua-300">
+                <i class="fa-solid fa-bullseye text-3xl" aria-hidden="true"></i>
+              </span>
+              <p class="mt-6 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-deep-700/80">03 — Lo que nos mueve</p>
+              <p class="mt-3 font-display text-4xl font-semibold tracking-tight text-deep-950">Misión</p>
+            </div>
+          </div>
+
+          <!-- Texto -->
+          <div class="lg:col-span-8" data-reveal style="transition-delay:.12s">
+            <h2 id="mision-title" class="sr-only">Misión</h2>
+            <p class="text-[0.68rem] font-semibold uppercase tracking-[0.32em] text-aqua-700">Nuestra misión</p>
+            <span class="mt-6 flex items-center gap-3" aria-hidden="true"><span class="h-px w-14 bg-sand-400"></span><span class="h-1.5 w-1.5 rounded-full bg-aqua-500"></span></span>
+            <blockquote class="mt-8 font-display text-2xl font-medium leading-[1.4] tracking-tight text-deep-950 sm:text-3xl lg:text-[2.1rem]">
+              Proporcionar a nuestros consumidores bebidas puras y saludables, elaboradas con
+              los más altos estándares de calidad.
+            </blockquote>
+            <p class="mt-7 max-w-3xl text-base leading-relaxed text-deep-700/90 sm:text-lg">
+              Nos dedicamos a innovar contínuamente y a mejorar nuestros productos para garantizar
+              que cada prodcuto sea una opción confiable y accesible contribuyendo a la salud y
+              satisfacción de quienes nos eligen.
+            </p>
+
+            <ul class="mt-10 grid gap-4 sm:grid-cols-3">
+              <li class="flex items-center gap-3 rounded-2xl border border-deep-900/10 bg-white px-5 py-4 shadow-card" data-reveal><i class="fa-solid fa-droplet text-aqua-600" aria-hidden="true"></i><span class="text-sm font-semibold text-deep-800">Bebidas puras</span></li>
+              <li class="flex items-center gap-3 rounded-2xl border border-deep-900/10 bg-white px-5 py-4 shadow-card" data-reveal style="transition-delay:.08s"><i class="fa-solid fa-heart text-aqua-600" aria-hidden="true"></i><span class="text-sm font-semibold text-deep-800">Salud y satisfacción</span></li>
+              <li class="flex items-center gap-3 rounded-2xl border border-deep-900/10 bg-white px-5 py-4 shadow-card" data-reveal style="transition-delay:.16s"><i class="fa-solid fa-lightbulb text-aqua-600" aria-hidden="true"></i><span class="text-sm font-semibold text-deep-800">Innovación continua</span></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         04 — VISIÓN
+         ========================================================== -->
+    <section class="noise noise-strong relative overflow-hidden bg-deep-900 py-24 text-cream md:py-36" aria-labelledby="vision-title">
+      <div class="relative z-10 mx-auto max-w-7xl px-5 sm:px-8">
+        <div class="grid items-center gap-14 lg:grid-cols-12 lg:gap-16">
+
+          <!-- Texto -->
+          <div class="lg:col-span-8" data-reveal>
+            <p class="text-[0.68rem] font-semibold uppercase tracking-[0.32em] text-aqua-300">04 — Hacia dónde vamos</p>
+            <h2 id="vision-title" class="mt-5 font-display text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+              Visión
+            </h2>
+            <span class="mt-7 flex items-center gap-3" aria-hidden="true"><span class="h-px w-14 bg-sand-400"></span><span class="h-1.5 w-1.5 rounded-full bg-aqua-400"></span></span>
+
+            <p class="mt-8 text-base leading-relaxed text-glacier-200 sm:text-lg">
+              Expandir nuestra presencia en toda Colombia con un canal de distribución eficiente,
+              consolidándonos como una marca destacada y confiable en el mercado de bebidas.
+              Queremos ser sinónimo de calidad e innovación, ofreciendo productos que nos aporten
+              un valor real a la vida diaria de nuestros consumidores y fomenten un estilo de vida
+              saludable.
+            </p>
+
+            <div class="mt-10 flex flex-wrap gap-x-8 gap-y-4 text-sm text-glacier-300">
+              <span class="inline-flex items-center gap-2.5"><i class="fa-solid fa-map-location-dot text-aqua-400" aria-hidden="true"></i> Presencia en toda Colombia</span>
+              <span class="inline-flex items-center gap-2.5"><i class="fa-solid fa-arrows-rotate text-aqua-400" aria-hidden="true"></i> Canal de distribución eficiente</span>
+              <span class="inline-flex items-center gap-2.5"><i class="fa-solid fa-seedling text-aqua-400" aria-hidden="true"></i> Estilo de vida saludable</span>
+            </div>
+          </div>
+
+          <!-- Sello -->
+          <div class="lg:col-span-4" data-reveal style="transition-delay:.12s">
+            <div class="overflow-hidden rounded-3xl border border-cream/10 bg-cream/5 p-10 text-center shadow-lift backdrop-blur-sm">
+              <span class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-aqua-500 text-deep-950">
+                <i class="fa-solid fa-binoculars text-3xl" aria-hidden="true"></i>
+              </span>
+              <p class="mt-6 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-glacier-300">Nuestro horizonte</p>
+              <p class="mt-3 font-display text-3xl font-semibold leading-tight tracking-tight text-cream">Calidad e innovación para Colombia</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         CIERRE — llamada a la acción
+         ========================================================== -->
+    <section class="bg-cream py-20 md:py-28" aria-label="Continuar navegando">
+      <div class="mx-auto flex max-w-7xl flex-col items-start justify-between gap-8 px-5 sm:px-8 lg:flex-row lg:items-center">
+        <div data-reveal>
+          <h2 class="font-display text-3xl font-semibold tracking-tight sm:text-4xl">
+            El agua que nace <em class="font-light italic text-aqua-700">pura</em> y purifica tu cuerpo.
+          </h2>
+          <p class="mt-4 max-w-xl text-base leading-relaxed text-deep-700/85">
+            Conoce nuestras presentaciones y agenda tu domicilio el mismo día.
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-4" data-reveal style="transition-delay:.1s">
+          <a href="index.html#productos" class="inline-flex items-center gap-3 rounded-full bg-deep-900 px-8 py-4 text-sm font-semibold text-cream transition duration-300 ease-smooth hover:-translate-y-0.5 hover:bg-deep-700">
+            Ver productos
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+          </a>
+          <a href="index.html#contacto" class="inline-flex items-center gap-3 rounded-full border border-deep-900/25 px-8 py-4 text-sm font-semibold text-deep-900 transition duration-300 ease-smooth hover:border-deep-900/60 hover:bg-deep-900/5">
+            Contáctanos
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================
+       FOOTER — oscuro, con ondas, enlaces y créditos
+       ========================================================== -->
+  <footer class="noise noise-soft bg-deep-950 pt-10 text-glacier-200">
+    <svg viewBox="0 0 1440 90" preserveAspectRatio="none" class="-mt-14 mb-14 block h-14 w-full fill-cream-50 md:-mt-20 md:mb-16 md:h-20" aria-hidden="true">
+      <path d="M0,0 C220,72 500,88 780,60 C1060,32 1260,28 1440,50 L1440,0 Z"/>
+    </svg>
+
+    <div class="mx-auto max-w-7xl px-5 pb-10 sm:px-8">
+      <div class="grid gap-12 lg:grid-cols-12">
+        <div class="lg:col-span-5">
+          <a href="index.html" class="flex items-center gap-3" aria-label="Agua Monte Elías — inicio">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="h-9 w-9 text-aqua-400" aria-hidden="true"><path d="M16 3.5c5.2 6.6 8.6 11 8.6 15.4a8.6 8.6 0 1 1-17.2 0C7.4 14.5 10.8 10.1 16 3.5Z"/><path d="M10.8 20.2l3.6-4.6 2.7 3.2 4.3-5.1"/></svg>
+            <span class="font-display text-2xl font-semibold tracking-tight text-cream">Monte Elías</span>
+          </a>
+          <p class="mt-6 max-w-sm text-sm leading-relaxed">
+            Agua Monte Elías, purifica tu cuerpo. Agua potable tratada de excelente
+            calidad, 100% natural, embotellada en Madrid, Cundinamarca para toda Colombia.
+          </p>
+          <p class="mt-6 text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-aqua-300">Nuestro planeta es nuestra casa</p>
+        </div>
+
+        <nav class="lg:col-span-2" aria-label="Enlaces del sitio">
+          <h3 class="text-[0.65rem] font-bold uppercase tracking-[0.26em] text-cream">Explorar</h3>
+          <ul class="mt-5 space-y-3 text-sm">
+            <li><a href="index.html" class="transition hover:text-aqua-300">Inicio</a></li>
+            <li><a href="nosotros.html" class="transition hover:text-aqua-300">Nosotros</a></li>
+            <li><a href="index.html#productos" class="transition hover:text-aqua-300">Productos</a></li>
+            <li><a href="index.html#contacto" class="transition hover:text-aqua-300">Contacto</a></li>
+          </ul>
+        </nav>
+
+        <nav class="lg:col-span-2" aria-label="Presentaciones">
+          <h3 class="text-[0.65rem] font-bold uppercase tracking-[0.26em] text-cream">Productos</h3>
+          <ul class="mt-5 space-y-3 text-sm">
+            <li><a href="index.html#productos" class="transition hover:text-aqua-300">Botellón 5 galones</a></li>
+            <li><a href="index.html#productos" class="transition hover:text-aqua-300">Botellas 355 ml – 5 L</a></li>
+            <li><a href="index.html#productos" class="transition hover:text-aqua-300">Bolsas 300 ml – 6 L</a></li>
+            <li><a href="index.html#productos" class="transition hover:text-aqua-300">Línea con gas</a></li>
+          </ul>
+        </nav>
+
+        <div class="lg:col-span-3">
+          <h3 class="text-[0.65rem] font-bold uppercase tracking-[0.26em] text-cream">Contacto</h3>
+          <ul class="mt-5 space-y-3 text-sm">
+            <li>Madrid, Cundinamarca · Bogotá y Sabana</li>
+            <li><a href="tel:+573000000000" class="transition hover:text-aqua-300">+57 300 000 0000</a></li>
+            <li><a href="mailto:hola@aguamonteelias.com" class="transition hover:text-aqua-300">hola@aguamonteelias.com</a></li>
+            <li>Lun – Sáb · 7:00 a. m. a 5:00 p. m.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-14 flex flex-col items-center justify-between gap-4 border-t border-cream/10 pt-8 text-xs text-glacier-300/80 sm:flex-row">
+        <p>© <span id="year">2026</span> Agua Monte Elías. Todos los derechos reservados.</p>
+        <p>Hecho con agua, montaña y paciencia en Colombia 🇨</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================
+       CARRITO LATERAL (drawer)
+       ========================================================== -->
+  <div id="cartOverlay" class="pointer-events-none fixed inset-0 z-[60] bg-deep-950/60 opacity-0 transition-opacity duration-500" aria-hidden="true"></div>
+  <aside id="cartDrawer" class="fixed inset-y-0 right-0 z-[61] flex h-full w-full max-w-md translate-x-full flex-col bg-cream shadow-lift transition-transform duration-500 ease-smooth" aria-label="Carrito de compras" aria-hidden="true">
+    <div class="flex items-center justify-between border-b border-deep-900/10 px-7 py-6">
+      <h2 class="font-display text-2xl font-semibold tracking-tight">Tu pedido</h2>
+      <button id="cartClose" class="rounded-full border border-deep-900/15 p-2.5 text-deep-800 transition hover:bg-deep-900/5" aria-label="Cerrar carrito">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" class="h-5 w-5" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+
+    <div id="cartItems" class="flex-1 overflow-y-auto px-7"></div>
+
+    <div class="border-t border-deep-900/10 px-7 py-6">
+      <div class="flex items-baseline justify-between">
+        <span class="text-sm font-semibold uppercase tracking-[0.18em] text-deep-700/80">Subtotal</span>
+        <span id="cartSubtotal" class="font-display text-2xl font-semibold">$ 0</span>
+      </div>
+      <p class="mt-2 text-xs text-deep-700/70">Envío confirmado al cerrar tu pedido por WhatsApp.</p>
+      <button id="checkoutBtn" class="mt-5 inline-flex w-full items-center justify-center gap-3 rounded-full bg-aqua-500 px-8 py-4 text-sm font-bold text-deep-950 transition duration-300 ease-smooth hover:bg-aqua-400 active:scale-[0.99]">
+        Finalizar pedido por WhatsApp
+      </button>
+      <button id="keepShopping" class="mt-3 w-full rounded-full px-8 py-3 text-sm font-medium text-deep-700 transition hover:text-deep-950">Seguir comprando</button>
+    </div>
+  </aside>
+
+  <!-- ==========================================================
+       JAVASCRIPT — header, menú, reveals, contadores, carrito
+       ========================================================== -->
+  <script>
+    (() => {
+      'use strict';
+      const $  = (s, c = document) => c.querySelector(s);
+      const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
+
+      const CONFIG = { whatsapp: '573000000000' };
+      const COP = v => new Intl.NumberFormat('es-CO', { style:'currency', currency:'COP', maximumFractionDigits:0 }).format(v);
+
+      /* ---------- 1. Header: estado al hacer scroll ---------- */
+      const header = $('#site-header');
+      const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 100);
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive: true });
+
+      /* ---------- 2. Bloqueo de scroll con overlays abiertos ---------- */
+      const lockScroll = () => {
+        const open = ($('#cartDrawer') && !$('#cartDrawer').classList.contains('translate-x-full'))
+                  || !$('#mobileMenu').classList.contains('translate-x-full');
+        document.body.classList.toggle('overflow-hidden', open);
+      };
+
+      /* ---------- 3. Menú móvil ---------- */
+      const menu = $('#mobileMenu'), menuOverlay = $('#menuOverlay');
+      const setMenu = open => {
+        menu.classList.toggle('translate-x-full', !open);
+        menuOverlay.classList.toggle('opacity-0', !open);
+        menuOverlay.classList.toggle('pointer-events-none', !open);
+        $('#menuBtn').setAttribute('aria-expanded', String(open));
+        lockScroll();
+      };
+      $('#menuBtn').addEventListener('click', () => setMenu(true));
+      $('#menuClose').addEventListener('click', () => setMenu(false));
+      menuOverlay.addEventListener('click', () => setMenu(false));
+      $$('.mobile-link').forEach(a => a.addEventListener('click', () => setMenu(false)));
+
+      /* ---------- 4. Animaciones de entrada (IntersectionObserver) ---------- */
+      const io = new IntersectionObserver(entries => entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); }
+      }), { threshold: .12, rootMargin: '0px 0px -60px 0px' });
+      $$('[data-reveal]').forEach(el => io.observe(el));
+
+      /* ---------- 5. Contadores animados ---------- */
+      const cio = new IntersectionObserver(entries => entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        cio.unobserve(e.target);
+        const el = e.target, end = +el.dataset.count, t0 = performance.now(), dur = 1600;
+        const tick = t => {
+          const p = Math.min((t - t0) / dur, 1), eased = 1 - Math.pow(1 - p, 3);
+          el.textContent = Math.round(end * eased);
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }), { threshold: .6 });
+      $$('[data-count]').forEach(el => cio.observe(el));
+
+      /* ---------- 6. Carrito (drawer) ---------- */
+      const cart = new Map();
+      const drawer = $('#cartDrawer'), drawerOverlay = $('#cartOverlay'),
+            itemsEl = $('#cartItems'), subtotalEl = $('#cartSubtotal'), countEl = $('#cartCount');
+
+      const setDrawer = open => {
+        drawer.classList.toggle('translate-x-full', !open);
+        drawerOverlay.classList.toggle('opacity-0', !open);
+        drawerOverlay.classList.toggle('pointer-events-none', !open);
+        drawer.setAttribute('aria-hidden', String(!open));
+        lockScroll();
+      };
+      $('#cartBtn').addEventListener('click', () => setDrawer(true));
+      $('#cartClose').addEventListener('click', () => setDrawer(false));
+      $('#keepShopping').addEventListener('click', () => setDrawer(false));
+      drawerOverlay.addEventListener('click', () => setDrawer(false));
+
+      const cartTotal = () => [...cart.values()].reduce((a, i) => a + i.price * i.qty, 0);
+
+      function renderCart() {
+        const entries = [...cart.entries()];
+        const count = entries.reduce((a, [, i]) => a + i.qty, 0);
+        countEl.textContent = count;
+        countEl.classList.toggle('hidden', count === 0);
+        countEl.classList.remove('badge-pop'); void countEl.offsetWidth; countEl.classList.add('badge-pop');
+
+        if (!entries.length) {
+          itemsEl.innerHTML = `
+            <div class="flex h-full flex-col items-center justify-center gap-4 py-16 text-center">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" class="h-12 w-12 text-deep-900/25" aria-hidden="true"><path d="M6 7h12l1.2 13H4.8L6 7Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg>
+              <p class="font-display text-xl font-semibold">Tu carrito está vacío</p>
+              <p class="max-w-[22ch] text-sm text-deep-700/75">Agrega tu presentación favorita y llega a tu puerta el mismo día.</p>
+            </div>`;
+        } else {
+          itemsEl.innerHTML = entries.map(([id, i]) => `
+            <div class="flex gap-4 border-b border-deep-900/10 py-5">
+              <img src="${i.img}" alt="" loading="lazy" class="h-24 w-20 rounded-xl object-cover" />
+              <div class="flex-1">
+                <div class="flex items-start justify-between gap-3">
+                  <h4 class="font-display text-lg font-semibold leading-snug">${i.name}</h4>
+                  <button data-remove="${id}" class="rounded-full p-1 text-deep-700/60 transition hover:text-deep-950" aria-label="Quitar ${i.name} del carrito">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" class="h-4 w-4" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+                  </button>
+                </div>
+                <p class="mt-0.5 text-xs text-deep-700/70">${COP(i.price)} c/u</p>
+                <div class="mt-3 flex items-center justify-between">
+                  <div class="flex items-center rounded-full border border-deep-900/15">
+                    <button data-cart-dec="${id}" class="px-2.5 py-1.5 text-deep-700 transition hover:text-deep-950" aria-label="Disminuir">−</button>
+                    <span class="w-6 text-center text-sm font-semibold">${i.qty}</span>
+                    <button data-cart-inc="${id}" class="px-2.5 py-1.5 text-deep-700 transition hover:text-deep-950" aria-label="Aumentar">+</button>
+                  </div>
+                  <span class="text-sm font-semibold">${COP(i.price * i.qty)}</span>
+                </div>
+              </div>
+            </div>`).join('');
+        }
+        subtotalEl.textContent = COP(cartTotal());
+      }
+      renderCart();
+
+      itemsEl.addEventListener('click', e => {
+        const b = e.target.closest('button'); if (!b) return;
+        if (b.dataset.cartInc) cart.get(b.dataset.cartInc).qty = Math.min(99, cart.get(b.dataset.cartInc).qty + 1);
+        if (b.dataset.cartDec) { const it = cart.get(b.dataset.cartDec); it.qty -= 1; if (it.qty < 1) cart.delete(b.dataset.cartDec); }
+        if (b.dataset.remove)  cart.delete(b.dataset.remove);
+        renderCart();
+      });
+
+      $('#checkoutBtn').addEventListener('click', () => {
+        if (!cart.size) return;
+        const lines = [...cart.values()].map(i => `• ${i.qty} × ${i.name} (${COP(i.price * i.qty)})`).join('\n');
+        const msg = `Hola Agua Monte Elías 💧 quiero pedir:\n${lines}\nSubtotal: ${COP(cartTotal())}`;
+        window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
+      });
+
+      /* ---------- 7. Tecla Escape cierra todo ---------- */
+      document.addEventListener('keydown', e => {
+        if (e.key !== 'Escape') return;
+        setDrawer(false); setMenu(false);
+      });
+
+      /* ---------- 8. Año dinámico ---------- */
+      $('#year').textContent = new Date().getFullYear();
+    })();
+  </script>
+</body>
+</html>
