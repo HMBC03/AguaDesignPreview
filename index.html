@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agua Monte Elías — Agua 100% natural que purifica tu cuerpo</title>
+  <meta name="description" content="Agua Monte Elías: agua potable tratada de excelente calidad, 100% natural. Botellones, botellas y bolsas con domicilio en Bogotá y Sabana. Nuestro planeta es nuestra casa." />
+  <meta name="theme-color" content="#0B2A3C" />
+
+  <!-- ============ TIPOGRAFÍAS: Fraunces (display serif) + DM Sans (cuerpo) ============ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=DM+Sans:opsz,wght@9..40,300..700&display=swap" rel="stylesheet" />
+
+  <!-- ============ TAILWIND CDN + CONFIGURACIÓN DE MARCA ============ -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    /* Paleta y fuentes de marca.
+       En producción, mover este objeto a tailwind.config.js (build Vite). */
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            deep:    { 950:'#04141F', 900:'#0B2A3C', 800:'#123A50', 700:'#1C4A64', 600:'#2A5F7C' },   // azul profundo
+            glacier: { 50:'#F0F7F9', 100:'#E1EEF2', 200:'#C6DFE8', 300:'#A3CBD9', 400:'#7FB2C6' },     // azul glaciar
+            aqua:    { 200:'#BFE3DD', 300:'#9AD2CA', 400:'#77BDB4', 500:'#5AA79D', 600:'#468C82', 700:'#2F6B62' }, // aguamarina
+            cream:   { DEFAULT:'#F7F5F0', 50:'#FBFAF7', 100:'#F1EDE4', 200:'#E7E0D2' },                // blanco roto cálido
+            sand:    { 200:'#E7D9BF', 300:'#D6C09A', 400:'#C2A578', 500:'#A98B5C' }                    // acento arena/dorado apagado
+          },
+          fontFamily: {
+            display: ['Fraunces', 'Georgia', 'serif'],
+            sans: ['"DM Sans"', 'system-ui', 'sans-serif']
+          },
+          boxShadow: {
+            card: '0 10px 40px -12px rgba(11,42,60,0.16)',
+            soft: '0 20px 60px -20px rgba(11,42,60,0.25)',
+            lift: '0 32px 90px -24px rgba(11,42,60,0.38)'
+          },
+          transitionTimingFunction: { smooth: 'cubic-bezier(0.22, 1, 0.36, 1)' }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* ==========================================================
+       1. BASE, ACCESIBILIDAD Y MOVIMIENTO REDUCIDO
+       ========================================================== */
+    :root { --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1); }
+    html  { scroll-padding-top: 96px; }               /* compensa el header fijo en anclas */
+    ::selection { background: #77BDB4; color: #04141F; }
+    :focus-visible { outline: 2px solid #5AA79D; outline-offset: 3px; border-radius: 2px; }
+
+    /* ==========================================================
+       2. GRANO EDITORIAL — utilidad .noise (SVG feTurbulence)
+       Se aplica como ::after sobre héroes, fotos de producto y galería.
+       ========================================================== */
+    .noise { position: relative; }
+    .noise::after {
+      content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+      opacity: .12; mix-blend-mode: soft-light;        /* prueba también overlay */
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 240px 240px;
+    }
+    .noise-soft::after   { opacity: .08; }
+    .noise-strong::after { opacity: .16; }
+
+    /* ==========================================================
+       3. HEADER FIJO TRANSLÚCIDO (dos estados: hero / scroll)
+       ========================================================== */
+    #site-header { background: rgba(4,20,31,.28); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+                   transition: background .45s var(--ease-smooth), box-shadow .45s var(--ease-smooth); }
+    #site-header.is-scrolled { background: rgba(247,245,240,.9); box-shadow: 0 12px 40px -22px rgba(11,42,60,.45); }
+    #site-header .h-link  { color: #F7F5F0; transition: color .45s var(--ease-smooth); }
+    #site-header .h-muted { color: #A3CBD9; transition: color .45s var(--ease-smooth); }
+    #site-header.is-scrolled .h-link  { color: #0B2A3C; }
+    #site-header.is-scrolled .h-muted { color: #46626F; }
+    .h-link { position: relative; }
+    .h-link::after { content:""; position:absolute; left:0; right:100%; bottom:-6px; height:1px;
+                     background: currentColor; transition: right .4s var(--ease-smooth); }
+    .h-link:hover::after, .h-link:focus-visible::after { right: 0; }
+
+    /* ==========================================================
+       4. ANIMACIONES DE ENTRADA (IntersectionObserver añade .is-visible)
+       ========================================================== */
+    [data-reveal] { opacity: 0; transform: translateY(28px);
+                    transition: opacity .8s var(--ease-smooth), transform .8s var(--ease-smooth); }
+    [data-reveal].is-visible { opacity: 1; transform: translateY(0); }
+
+    /* ==========================================================
+       5. MICRODETALLES: ken burns, gota del scroll, pops, tabs, campos
+       ========================================================== */
+    @keyframes kenburns { from { transform: scale(1.12); } to { transform: scale(1.02); } }
+    .kenburns { animation: kenburns 16s var(--ease-smooth) both; }
+
+    @keyframes drip { 0% { transform: translateY(-100%); } 65%,100% { transform: translateY(100%); } }
+    .scroll-line span { animation: drip 2.4s var(--ease-smooth) infinite; }
+
+    @keyframes pop { from { transform: scale(.5); } to { transform: scale(1); } }
+    .badge-pop { animation: pop .35s var(--ease-smooth); }
+
+    @keyframes fadeUp { from { opacity:0; transform: translateY(18px); } to { opacity:1; transform:none; } }
+    .pop-in { animation: fadeUp .6s var(--ease-smooth) both; }
+
+    .tab-btn { border: 1px solid rgba(11,42,60,.16); color: #1C4A64; border-radius: 9999px;
+               padding: .55rem 1.35rem; font-size: .82rem; letter-spacing: .06em;
+               transition: all .35s var(--ease-smooth); }
+    .tab-btn:hover { border-color: rgba(11,42,60,.4); }
+    .tab-btn.is-active { background: #0B2A3C; border-color: #0B2A3C; color: #F7F5F0; }
+
+    .label { display:block; margin-bottom:.45rem; font-size:.68rem; font-weight:600;
+             letter-spacing:.18em; text-transform:uppercase; color:#46626F; }
+    .field { width:100%; border-radius:.9rem; border:1px solid rgba(11,42,60,.12); background:#FBFAF7;
+             padding:.85rem 1.1rem; font-size:.95rem; color:#0B2A3C;
+             transition: border-color .3s, box-shadow .3s; }
+    .field::placeholder { color:#7A8C96; }
+    .field:focus { outline:none; border-color:#5AA79D; box-shadow:0 0 0 4px rgba(90,167,157,.18); }
+
+    /* ==========================================================
+       6. MOVIMIENTO REDUCIDO
+       ========================================================== */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+      html { scroll-behavior: auto; }
+      [data-reveal] { opacity:1; transform:none; }
+    }
+  </style>
+</head>
+
+<body class="bg-cream font-sans text-deep-900 antialiased">
+
+  <!-- Salto de accesibilidad -->
+  <a href="#contenido" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[90] focus:rounded-full focus:bg-deep-900 focus:px-5 focus:py-3 focus:text-cream">Saltar al contenido</a>
+
+  <!-- ==========================================================
+       HEADER — fijo, translúcido, con carrito y menú móvil
+       ========================================================== -->
+  <header id="site-header" class="fixed inset-x-0 top-0 z-50">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8 lg:py-5">
+
+      <!-- Logo -->
+      <a href="#inicio" class="group flex items-center gap-3" aria-label="Agua Monte Elías — inicio">
+        <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="h-9 w-9 text-aqua-400 transition-transform duration-500 group-hover:-translate-y-0.5" aria-hidden="true">
+          <path d="M16 3.5c5.2 6.6 8.6 11 8.6 15.4a8.6 8.6 0 1 1-17.2 0C7.4 14.5 10.8 10.1 16 3.5Z"/>
+          <path d="M10.8 20.2l3.6-4.6 2.7 3.2 4.3-5.1"/>
+        </svg>
+        <span class="leading-none">
+          <span class="h-link block font-display text-xl font-semibold tracking-tight sm:text-2xl">Monte Elías</span>
+          <span class="h-muted mt-1 block text-[0.58rem] font-semibold uppercase tracking-[0.34em]">Agua pura · Colombia</span>
+        </span>
+      </a>
+
+      <!-- Navegación escritorio -->
+      <nav class="hidden items-center gap-9 text-sm font-medium lg:flex" aria-label="Navegación principal">
+        <a href="#inicio"    class="h-link">Inicio</a>
+        <a href="#nosotros"  class="h-link">Nosotros</a>
+        <a href="#productos" class="h-link">Productos</a>
+        <a href="#galeria"   class="h-link">Galería</a>
+        <a href="#contacto"  class="h-link">Contacto</a>
+      </nav>
+
+      <!-- Acciones -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a href="#" class="h-link hidden rounded-full p-2.5 sm:block" aria-label="Mi cuenta"><!-- ✍️ Enlazar a /mi-cuenta en WooCommerce -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" class="h-5 w-5" aria-hidden="true"><circle cx="12" cy="8" r="3.6"/><path d="M4.8 20c1.2-3.6 4-5.4 7.2-5.4s6 1.8 7.2 5.4"/></svg>
+        </a>
+        <button id="cartBtn" class="h-link relative rounded-full p-2.5" aria-label="Abrir carrito de compras">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5" aria-hidden="true"><path d="M6 7h12l1.2 13H4.8L6 7Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg>
+          <span id="cartCount" class="badge-pop absolute -right-0.5 -top-0.5 hidden h-5 min-w-5 items-center justify-center rounded-full bg-sand-400 px-1 text-[0.65rem] font-bold text-deep-950">0</span>
+        </button>
+        <button id="menuBtn" class="h-link rounded-full p-2.5 lg:hidden" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" class="h-6 w-6" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Menú móvil (drawer derecho) -->
+  <div id="menuOverlay" class="pointer-events-none fixed inset-0 z-[55] bg-deep-950/60 opacity-0 transition-opacity duration-500" aria-hidden="true"></div>
+  <nav id="mobileMenu" class="noise fixed inset-y-0 right-0 z-[56] flex w-[86%] max-w-sm translate-x-full flex-col bg-deep-950 px-8 py-8 transition-transform duration-500 ease-smooth" aria-label="Navegación móvil">
+    <div class="flex items-center justify-between">
+      <span class="text-[0.6rem] font-semibold uppercase tracking-[0.34em] text-glacier-300">Menú</span>
+      <button id="menuClose" class="rounded-full border border-cream/15 p-2.5 text-cream transition hover:bg-cream/10" aria-label="Cerrar menú">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" class="h-5 w-5" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <ul class="mt-12 space-y-7 font-display text-3xl tracking-tight text-cream">
+      <li><a href="#inicio"    class="mobile-link block transition hover:text-aqua-300">Inicio</a></li>
+      <li><a href="#nosotros"  class="mobile-link block transition hover:text-aqua-300">Nosotros</a></li>
+      <li><a href="#productos" class="mobile-link block transition hover:text-aqua-300">Productos</a></li>
+      <li><a href="#galeria"   class="mobile-link block transition hover:text-aqua-300">Galería</a></li>
+      <li><a href="#contacto"  class="mobile-link block transition hover:text-aqua-300">Contacto</a></li>
+    </ul>
+    <p class="mt-auto text-sm leading-relaxed text-glacier-300">Agua Monte Elías, purifica tu cuerpo.<br/>Madrid, Cundinamarca · Bogotá y Sabana.</p>
+  </nav>
+
+  <main id="contenido">
+
+    <!-- ==========================================================
+         1. HERO — pantalla completa, imagen + grano + gradiente
+         ========================================================== -->
+    <section id="inicio" class="noise noise-strong relative flex min-h-svh items-center overflow-hidden bg-deep-950">
+      <!-- 📸 REEMPLAZAR: foto real del manantial / planta / montaña de la marca (ideal 2400px, WebP/AVIF) -->
+      <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=2400&q=80"
+           alt="Cumbre de montaña entre nubes, origen simbólico del agua Monte Elías"
+           class="kenburns absolute inset-0 h-full w-full object-cover opacity-80" fetchpriority="high" />
+      <!-- Gradientes suaves para legibilidad del texto -->
+      <div class="absolute inset-0 bg-gradient-to-t from-deep-950 via-deep-950/45 to-deep-950/15" aria-hidden="true"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-deep-950/75 via-deep-950/10 to-transparent" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto w-full max-w-7xl px-5 pb-36 pt-36 sm:px-8 lg:pb-44">
+        <p class="flex items-center gap-4 text-[0.68rem] font-semibold uppercase tracking-[0.32em] text-aqua-300" data-reveal>
+          <span class="h-px w-12 bg-aqua-400/70" aria-hidden="true"></span>
+          Manantial colombiano · Madrid, Cundinamarca
+        </p>
+
+        <h1 class="mt-8 max-w-4xl font-display text-5xl font-semibold leading-[1.04] tracking-tight text-cream sm:text-7xl lg:text-8xl" data-reveal style="transition-delay:.1s">
+          El agua que nace <em class="font-light italic text-aqua-300">pura</em><br class="hidden sm:block" />
+          y purifica tu cuerpo.
+        </h1>
+
+        <p class="mt-8 max-w-xl text-base leading-relaxed text-glacier-200 sm:text-lg" data-reveal style="transition-delay:.2s">
+          Dieciocho años de purificación exigente —rayos UV, filtración profunda y control
+          de cada lote— para que en tu mesa llegue agua 100% natural, con la frescura
+          del primer día.
+        </p>
+
+        <div class="mt-11 flex flex-wrap items-center gap-4" data-reveal style="transition-delay:.3s">
+          <a href="#productos" class="inline-flex items-center gap-3 rounded-full bg-cream px-8 py-4 text-sm font-semibold text-deep-900 shadow-soft transition duration-300 ease-smooth hover:-translate-y-0.5 hover:bg-white active:translate-y-0">
+            Ver productos
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+          </a>
+          <a href="#contacto" class="inline-flex items-center gap-3 rounded-full border border-cream/35 px-8 py-4 text-sm font-semibold text-cream transition duration-300 ease-smooth hover:border-cream/70 hover:bg-cream/10">
+            Contáctanos
+          </a>
+        </div>
+
+        <ul class="mt-14 flex flex-wrap items-center gap-x-8 gap-y-3 text-[0.68rem] font-semibold uppercase tracking-[0.26em] text-glacier-300" data-reveal style="transition-delay:.4s">
+          <li>Agua 100% natural</li>
+          <li class="h-1 w-1 rounded-full bg-sand-400" aria-hidden="true"></li>
+          <li>Calidad certificada</li>
+          <li class="h-1 w-1 rounded-full bg-sand-400" aria-hidden="true"></li>
+          <li>Domicilio el mismo día</li>
+        </ul>
+      </div>
+
+      <!-- Indicador de scroll -->
+      <div class="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-3" aria-hidden="true">
+        <span class="text-[0.58rem] font-semibold uppercase tracking-[0.3em] text-glacier-300">Descubre</span>
+        <div class="scroll-line h-14 w-px overflow-hidden rounded-full bg-cream/20"><span class="block h-full w-px bg-cream"></span></div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         2. FRANJA DE VALORES / CONFIANZA
+         ========================================================== -->
+    <section class="bg-cream pb-24 pt-10 md:pb-28" aria-label="Valores de la marca">
+      <!-- Onda de transición desde el hero -->
+      <svg viewBox="0 0 1440 90" preserveAspectRatio="none" class="-mt-14 mb-16 block h-14 w-full fill-deep-950 md:-mt-20 md:mb-20 md:h-20" aria-hidden="true">
+        <path d="M0,0 C180,70 420,90 720,64 C1020,38 1260,26 1440,48 L1440,0 Z"/>
+      </svg>
+
+      <div class="mx-auto max-w-7xl px-5 sm:px-8">
+        <div class="grid gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8 lg:divide-x lg:divide-deep-900/10">
+
+          <div class="lg:px-8 lg:first:pl-0" data-reveal>
+            <span class="inline-flex rounded-full border border-aqua-600/25 bg-aqua-200/30 p-3.5 text-aqua-700">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6" aria-hidden="true"><path d="M12 3c3.6 4.6 6 7.7 6 10.8a6 6 0 1 1-12 0C6 10.7 8.4 7.6 12 3Z"/><path d="M12 9v8"/></svg>
+            </span>
+            <h3 class="mt-5 font-display text-xl font-semibold tracking-tight">100% natural</h3>
+            <p class="mt-2.5 text-sm leading-relaxed text-deep-700/85">Sin sabores disfrazados ni atajos: agua en su estado más honesto, tratada con tecnología que respeta su esencia.</p>
+          </div>
+
+          <div class="lg:px-8" data-reveal style="transition-delay:.1s">
+            <span class="inline-flex rounded-full border border-aqua-600/25 bg-aqua-200/30 p-3.5 text-aqua-700">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6" aria-hidden="true"><path d="M12 3l7 2.8v5.4c0 4.8-3.4 8.3-7 9.8-3.6-1.5-7-5-7-9.8V5.8L12 3Z"/><path d="M9 12l2.2 2.2L15.5 10"/></svg>
+            </span>
+            <h3 class="mt-5 font-display text-xl font-semibold tracking-tight">Calidad certificada</h3>
+            <p class="mt-2.5 text-sm leading-relaxed text-deep-700/85">Purificación con rayos UV, filtros multicapa y análisis microbiológico de cada lote antes de salir de planta.</p>
+          </div>
+
+          <div class="lg:px-8" data-reveal style="transition-delay:.2s">
+            <span class="inline-flex rounded-full border border-aqua-600/25 bg-aqua-200/30 p-3.5 text-aqua-700">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6" aria-hidden="true"><path d="M2 7h11v9H2zM13 10h4.2l3 3.2V16H13z"/><circle cx="6" cy="18.5" r="1.8"/><circle cx="16.5" cy="18.5" r="1.8"/></svg>
+            </span>
+            <h3 class="mt-5 font-display text-xl font-semibold tracking-tight">Entrega a domicilio</h3>
+            <p class="mt-2.5 text-sm leading-relaxed text-deep-700/85">Rutas propias en Bogotá y la Sabana: pides por WhatsApp en la mañana y antes del almuerzo tienes tu agua en casa.</p>
+          </div>
+
+          <div class="lg:px-8 lg:last:pr-0" data-reveal style="transition-delay:.3s">
+            <span class="inline-flex rounded-full border border-aqua-600/25 bg-aqua-200/30 p-3.5 text-aqua-700">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.8 3.2 2.8 14.8 0 18M12 3c-2.8 3.2-2.8 14.8 0 18"/></svg>
+            </span>
+            <h3 class="mt-5 font-display text-xl font-semibold tracking-tight">Cuidado del ambiente</h3>
+            <p class="mt-2.5 text-sm leading-relaxed text-deep-700/85">Envases retornables y reciclaje con aliados locales, porque nuestro planeta es nuestra casa.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         3. PRODUCTOS — grid con pestañas, cantidad y carrito
+         ========================================================== -->
+    <section id="productos" class="bg-cream-50 py-24 md:py-36">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8">
+
+        <div class="max-w-2xl" data-reveal>
+          <p class="text-[0.68rem] font-semibold uppercase tracking-[0.32em] text-aqua-700">Nuestras presentaciones</p>
+          <h2 class="mt-5 font-display text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+            Pureza para <em class="font-light italic text-aqua-700">cada momento</em> del día
+          </h2>
+          <span class="mt-7 flex items-center gap-3" aria-hidden="true"><span class="h-px w-14 bg-sand-400"></span><span class="h-1.5 w-1.5 rounded-full bg-aqua-500"></span></span>
+          <p class="mt-6 text-base leading-relaxed text-deep-700/85">
+            Del botellón que reúne a la familia alrededor de la mesa hasta la botella que
+            viaja en tu mochila. Elige tu formato: todos llevan la misma agua de excelente calidad.
+          </p>
+        </div>
+
+        <!-- Pestañas de filtrado por presentación -->
+        <div class="mt-12 flex flex-wrap gap-2.5" role="group" aria-label="Filtrar productos por presentación" data-reveal>
+          <button class="tab-btn is-active" data-filter="todas"   aria-pressed="true">Todas</button>
+          <button class="tab-btn" data-filter="botellon" aria-pressed="false">Botellón</button>
+          <button class="tab-btn" data-filter="botella"  aria-pressed="false">Botellas</button>
+          <button class="tab-btn" data-filter="bolsa"    aria-pressed="false">Bolsas</button>
+          <button class="tab-btn" data-filter="gas"      aria-pressed="false">Con gas</button>
+        </div>
+
+        <!-- 📸 REEMPLAZAR cada img por la foto real del producto (fondo claro, 1200px, WebP) -->
+        <div id="productsGrid" class="mt-12 grid gap-7 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+
+          <!-- Producto 1 -->
+          <article class="product-card group flex flex-col overflow-hidden rounded-3xl bg-white shadow-card transition duration-500 ease-smooth hover:-translate-y-2 hover:shadow-lift"
+                   data-reveal data-cat="botellon" data-id="botellon-5gal" data-name="Botellón 5 galones" data-price="8500"
+                   data-img="https://images.unsplash.com/photo-1523362628745-0c100150b504?auto=format&fit=crop&w=900&q=80">
+            <div class="noise relative aspect-[4/5] overflow-hidden">
+              <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1523362628745-0c100150b504?auto=format&fit=crop&w=900&q=80" alt="Botellón de agua Monte Elías de 5 galones" class="h-full w-full object-cover transition duration-700 ease-smooth group-hover:scale-105 group-hover:brightness-110" />
+              <div class="absolute inset-0 bg-gradient-to-t from-deep-950/55 via-transparent to-transparent" aria-hidden="true"></div>
+              <span class="absolute left-4 top-4 z-10 rounded-full bg-sand-400 px-3.5 py-1.5 text-[0.62rem] font-bold uppercase tracking-[0.18em] text-deep-950">Más vendido</span>
+              <span class="absolute bottom-4 left-4 z-10 text-[0.65rem] font-semibold uppercase tracking-[0.24em] text-glacier-200">18,9 L · Retornable</span>
+            </div>
+            <div class="flex flex-1 flex-col p-6 sm:p-7">
+              <h3 class="font-display text-2xl font-semibold tracking-tight">Botellón 5 galones</h3>
+              <p class="mt-2.5 text-sm leading-relaxed text-deep-700/80">El protagonista del hogar y la oficina: retornable, rendidor y siempre fresco sobre el dispensador.</p>
+              <div class="mt-auto flex items-end justify-between gap-4 pt-6">
+                <p><span class="block text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-deep-600/70">Precio</span>
+                   <span class="font-display text-2xl font-semibold">$ 8.500</span> <span class="text-xs text-deep-600/80">COP</span></p>
+                <div class="flex items-center rounded-full border border-deep-900/15" aria-label="Cantidad">
+                  <button data-dec class="px-3 py-2 text-deep-700 transition hover:text-deep-950" aria-label="Disminuir cantidad">−</button>
+                  <span class="qty w-6 text-center text-sm font-semibold" aria-live="polite">1</span>
+                  <button data-inc class="px-3 py-2 text-deep-700 transition hover:text-deep-950" aria-label="Aumentar cantidad">+</button>
+                </div>
+              </div>
+              <button data-add class="mt-5 inline-flex items-center justify-center gap-2.5 rounded-full bg-deep-900 px-6 py-3.5 text-sm font-semibold text-cream transition duration-300 ease-smooth hover:bg-deep-700 active:scale-[0.98]">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" aria-hidden="true"><path d="M6 7h12l1.2 13H4.8L6 7Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg>
+                Agregar al carrito
+              </button>
+            </div>
+          </article>
+
+          <!-- Producto 2 -->
+          <article class="product-card group flex flex-col overflow-hidden rounded-3xl bg-white shadow-card transition duration-500 ease-smooth hover:-translate-y-2 hover:shadow-lift"
+                   data-reveal style="transition-delay:.08s" data-cat="botella" data-id="botella-600" data-name="Botella 600 ml" data-price="2000"
+                   data-img="https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=900&q=80">
+            <div class="noise relative aspect-[4/5] overflow-hidden">
+              <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=900&q=80" alt="Ola de agua cristalina, imagen conceptual de la botella de 600 ml" class="h-full w-full object-cover transition duration-700 ease-smooth group-hover:scale-105 group-hover:brightness-110" />
+              <div class="absolute inset-0 bg-gradient-to-t from-deep-950/55 via-transparent to-transparent" aria-hidden="true"></div>
+              <span class="absolute bottom-4 left-4 z-10 text-[0.65rem] font-semibold uppercase tracking-[0.24em] text-glacier-200">600 ml</span>
+            </div>
+            <div class="flex flex-1 flex-col p-6 sm:p-7">
+              <h3 class="font-display text-2xl font-semibold tracking-tight">Botella 600 ml</h3>
+              <p class="mt-2.5 text-sm leading-relaxed text-deep-700/80">La porción diaria: ligera, resistente y lista para acompañarte del escritorio a la ciclovía.</p>
+              <div class="mt-auto flex items-end justify-between gap-4 pt-6">
+                <p><span class="block text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-deep-600/70">Precio</span>
+                   <span class="font-display text-2xl font-semibold">$ 2.000</span> <span class="text-xs text-deep-600/80">COP</span></p>
+                <div class="flex items-center rounded-full border border-deep-900/15" aria-label="Cantidad">
+                  <button data-dec class="px-3 py-2 text-deep-700 transition hover:text-deep-950" aria-label="Disminuir cantidad">−</button>
+                  <span class="qty w-6 text-center text-sm font-semibold" aria-live="polite">1</span>
+                  <button data-inc class="px-3 py-2 text-deep-700 transition hover:text-deep-950" aria-label="Aumentar cantidad">+</button>
+                </div>
+              </div>
+              <button data-add class="mt-5 inline-flex items-center justify-center gap-2.5 rounded-full bg-deep-900 px-6 py-3.5 text-sm font-semibold text-cream transition duration-300 ease-smooth hover:bg-deep-700 active:scale-[0.98]">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" aria-hidden="true"><path d="M6 7h12l1.2 13H4.8L6 7Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg>
+                Agregar al carrito
+              </button>
+            </div>
+          </article>
+
+          <!-- Producto 3 -->
+          <article class="product-card group flex flex-col overflow-hidden rounded-3xl bg-white shadow-card transition duration-500 ease-smooth hover:-translate-y-2 hover:shadow-lift"
+                   data-reveal style="transition-delay:.16s" data-cat="botella" data-id="botella-1l" data-name="Botella 1 Litro" data-price="2800"
+                   data-img="https://images.unsplash.com/photo-1559825481-12a05cc00344?auto=format&fit=crop&w=900&q=80">
+            <div class="noise relative aspect-[4/5] overflow-hidden">
+              <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1559825481-12a05cc00344?auto=format&fit=crop&w=900&q=80" alt="Agua profunda y serena, imagen conceptual de la botella de 1 litro" class="h-full w-full object-cover transition duration-700 ease-smooth group-hover:scale-105 group-hover:brightness-110" />
+              <div class="absolute inset-0 bg-gradient-to-t from-deep-950/55 via-transparent to-transparent" aria-hidden="true"></div>
+              <span class="absolute bottom-4 left-4 z-10 text-[0.65rem] font-semibold uppercase tracking-[0.24em] text-glacier-200">1 Litro</span>
+            </div>
+            <div class="flex flex-1 flex-col p-6 sm:p-7">
+              <h3 class="font-display text-2xl font-semibold tracking-tight">Botella 1 Litro</h3>
+              <p class="mt-2.5 text-sm leading-relaxed text-deep-700/80">Para la mesa y el camino: el equilibrio justo entre contenido y ligereza, con sello hermético.</p>
+              <div class="mt-auto flex items-end justify-between gap-4 pt-6">
+                <p><span class="block text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-deep-600/70">Precio</span>
+                   <span class="font-display text-2xl font-semibold">$ 2.800</span> <span class="text-xs text-deep-600/80">COP</span></p>
+                <div class="flex items-center rounded-full border border-deep-900/15" aria-label="Cantidad">
+                  <button data-dec class="px-3 py-2 text-deep-700 transition hover:text-deep-950" aria-label="Disminuir cantidad">−</button>
+                  <span class="qty w-6 text-center text-sm font-semibold" aria-live="polite">1</span>
+                  <button data-inc class="px-3 py-2 text-deep-700 transition hover:text-deep-950" aria-label="Aumentar cantidad">+</button>
+                </div>
+              </div>
+              <button data-add class="mt-5 inline-flex items-center justify-center gap-2.5 rounded-full bg-deep-900 px-6 py-3.5 text-sm font-semibold text-cream transition duration-300 ease-smooth hover:bg-deep-700 active:scale-[0.98]">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" aria-hidden="true"><path d="M6 7h12l1.2 13H4.8L6 7Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg>
+                Agregar al carrito
+              </button>
+            </div>
+          </article>
+
+          <!-- Producto 4 -->
+          <article class="product-card group flex flex-col overflow-hidden rounded-3xl bg-white shadow-card transition duration-500 ease-smooth hover:-translate-y-2 hover:shadow-lift"
+                   data-reveal data-cat="botella" data-id="botella-5l" data-name="Botella 5 Litros" data-price="5900"
+                   data-img="https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=900&q=80">
+            <div class="noise relative aspect-[4/5] overflow-hidden">
+              <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=900&q=80" alt="Salpicadura de agua pura, imagen conceptual de la botella de 5 litros" class="h-full w-full object-cover transition duration-700 ease-smooth group-hover:scale-105 group-hover:brightness-110" />
+              <div class="absolute inset-0 bg-gradient-to-t from-deep-950/55 via-transparent to-transparent" aria-hidden="true"></div>
+              <span class="absolute bottom-4 left-4 z-10 text-[0.65rem] font-semibold uppercase tracking-[0.24em] text-glacier-200">5 Litros</span>
+            </div>
+            <div class="flex flex-1 flex-col p-6 sm:p-7">
+              <h3 class="font-display text-2xl font-semibold tracking-tight">Botella 5 Litros</h3>
+              <p class="mt-2.5 text-sm leading-relaxed text-deep-700/80">La aliada de la cocina: asa cómoda, vertido preciso y pureza suficiente para toda la comida.</p>
+              <div class="mt-auto flex items-end justify-between gap-4 pt-6">
+                <p><span class="block text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-deep-600/70">Precio</span>
+                   <span class="font-display text-2xl font-semibold">$ 5.900</span> <span class="text-xs text-deep-600/80">COP</span></p>
+                <div class="flex items-center rounded-full border border-deep-900/15" aria-label="Cantidad">
+                  <button data-dec class="px-3 py-2 text-deep-700 transition hover:text-deep-950" aria-label="Disminuir cantidad">−</button>
+                  <span class="qty w-6 text-center text-sm font-semibold" aria-live="polite">1</span>
+                  <button data-inc class="px-3 py-2 text-deep-700 transition hover:text-deep-950" aria-label="Aumentar cantidad">+</button>
+                </div>
+              </div>
+              <button data-add class="mt-5 inline-flex items-center justify-center gap-2.5 rounded-full bg-deep-900 px-6 py-3.5 text-sm font-semibold text-cream transition duration-300 ease-smooth hover:bg-deep-700 active:scale-[0.98]">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" aria-hidden="true"><path d="M6 7h12l1.2 13H4.8L6 7Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg>
+                Agregar al carrito
+              </button>
+            </div>
+          </article>
+
+          <!-- Producto 5 -->
+          <article class="product-card group flex flex-col overflow-hidden rounded-3xl bg-white shadow-card transition duration-500 ease-smooth hover:-translate-y-2 hover:shadow-lift"
+                   data-reveal style="transition-delay:.08s" data-cat="bolsa" data-id="bolsa-6l" data-name="Bolsa 6 Litros" data-price="4500"
+                   data-img="https://images.unsplash.com/photo-1504893524553-b855bce32c67?auto=format&fit=crop&w=900&q=80">
+            <div class="noise relative aspect-[4/5] overflow-hidden">
+              <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1504893524553-b855bce32c67?auto=format&fit=crop&w=900&q=80" alt="Río de montaña corriente, imagen conceptual de la bolsa de 6 litros" class="h-full w-full object-cover transition duration-700 ease-smooth group-hover:scale-105 group-hover:brightness-110" />
+              <div class="absolute inset-0 bg-gradient-to-t from-deep-950/55 via-transparent to-transparent" aria-hidden="true"></div>
+              <span class="absolute bottom-4 left-4 z-10 text-[0.65rem] font-semibold uppercase tracking-[0.24em] text-glacier-200">6 Litros</span>
+            </div>
+            <div class="flex flex-1 flex-col p-6 sm:p-7">
+              <h3 class="font-display text-2xl font-semibold tracking-tight">Bolsa 6 Litros</h3>
+              <p class="mt-2.5 text-sm leading-relaxed text-deep-700/80">El formato práctico y ligero para eventos, negocios y el día a día de la tienda del barrio.</p>
+              <div class="mt-auto flex items-end justify-between gap-4 pt-6">
+                <p><span class="block text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-deep-600/70">Precio</span>
+                   <span class="font-display text-2xl font-semibold">$ 4.500</span> <span class="text-xs text-deep-600/80">COP</span></p>
+                <div class="flex items-center rounded-full border border-deep-900/15" aria-label="Cantidad">
+                  <button data-dec class="px-3 py-2 text-deep-700 transition hover:text-deep-950" aria-label="Disminuir cantidad">−</button>
+                  <span class="qty w-6 text-center text-sm font-semibold" aria-live="polite">1</span>
+                  <button data-inc class="px-3 py-2 text-deep-700 transition hover:text-deep-950" aria-label="Aumentar cantidad">+</button>
+                </div>
+              </div>
+              <button data-add class="mt-5 inline-flex items-center justify-center gap-2.5 rounded-full bg-deep-900 px-6 py-3.5 text-sm font-semibold text-cream transition duration-300 ease-smooth hover:bg-deep-700 active:scale-[0.98]">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" aria-hidden="true"><path d="M6 7h12l1.2 13H4.8L6 7Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg>
+                Agregar al carrito
+              </button>
+            </div>
+          </article>
+
+          <!-- Producto 6 -->
+          <article class="product-card group flex flex-col overflow-hidden rounded-3xl bg-white shadow-card transition duration-500 ease-smooth hover:-translate-y-2 hover:shadow-lift"
+                   data-reveal style="transition-delay:.16s" data-cat="gas" data-id="botella-355-gas" data-name="Botella 355 ml con gas" data-price="2500"
+                   data-img="https://images.unsplash.com/photo-1505118380757-91f5f5632de0?auto=format&fit=crop&w=900&q=80">
+            <div class="noise relative aspect-[4/5] overflow-hidden">
+              <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1505118380757-91f5f5632de0?auto=format&fit=crop&w=900&q=80" alt="Superficie de agua con burbujas finas, imagen conceptual de la línea con gas" class="h-full w-full object-cover transition duration-700 ease-smooth group-hover:scale-105 group-hover:brightness-110" />
+              <div class="absolute inset-0 bg-gradient-to-t from-deep-950/55 via-transparent to-transparent" aria-hidden="true"></div>
+              <span class="absolute left-4 top-4 z-10 rounded-full bg-glacier-200/95 px-3.5 py-1.5 text-[0.62rem] font-bold uppercase tracking-[0.18em] text-deep-900">Con gas</span>
+              <span class="absolute bottom-4 left-4 z-10 text-[0.65rem] font-semibold uppercase tracking-[0.24em] text-glacier-200">355 ml</span>
+            </div>
+            <div class="flex flex-1 flex-col p-6 sm:p-7">
+              <h3 class="font-display text-2xl font-semibold tracking-tight">Botella 355 ml con gas</h3>
+              <p class="mt-2.5 text-sm leading-relaxed text-deep-700/80">Burbuja fina y elegante para la mesa: el toque que despierta cualquier almuerzo o cóctel.</p>
+              <div class="mt-auto flex items-end justify-between gap-4 pt-6">
+                <p><span class="block text-[0.62rem] font-semibold uppercase tracking-[0.2em] text-deep-600/70">Precio</span>
+                   <span class="font-display text-2xl font-semibold">$ 2.500</span> <span class="text-xs text-deep-600/80">COP</span></p>
+                <div class="flex items-center rounded-full border border-deep-900/15" aria-label="Cantidad">
+                  <button data-dec class="px-3 py-2 text-deep-700 transition hover:text-deep-950" aria-label="Disminuir cantidad">−</button>
+                  <span class="qty w-6 text-center text-sm font-semibold" aria-live="polite">1</span>
+                  <button data-inc class="px-3 py-2 text-deep-700 transition hover:text-deep-950" aria-label="Aumentar cantidad">+</button>
+                </div>
+              </div>
+              <button data-add class="mt-5 inline-flex items-center justify-center gap-2.5 rounded-full bg-deep-900 px-6 py-3.5 text-sm font-semibold text-cream transition duration-300 ease-smooth hover:bg-deep-700 active:scale-[0.98]">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" aria-hidden="true"><path d="M6 7h12l1.2 13H4.8L6 7Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg>
+                Agregar al carrito
+              </button>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         4. NOSOTROS — layout asimétrico + cifras animadas
+         ========================================================== -->
+    <section id="nosotros" class="bg-cream py-24 md:py-40">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8">
+        <div class="grid items-center gap-16 lg:grid-cols-12 lg:gap-12">
+
+          <!-- Texto -->
+          <div class="lg:col-span-6" data-reveal>
+            <p class="text-[0.68rem] font-semibold uppercase tracking-[0.32em] text-aqua-700">Nuestra historia</p>
+            <h2 class="mt-5 font-display text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+              Tecnología exigente, <em class="font-light italic text-aqua-700">corazón</em> de manantial
+            </h2>
+            <span class="mt-7 flex items-center gap-3" aria-hidden="true"><span class="h-px w-14 bg-sand-400"></span><span class="h-1.5 w-1.5 rounded-full bg-aqua-500"></span></span>
+
+            <p class="mt-8 text-base leading-relaxed text-deep-700/90">
+              Agua Monte Elías nació en Madrid, Cundinamarca, con una convicción sencilla:
+              el agua que llega a tu casa merece el mismo respeto con el que la naturaleza
+              la creó. Por eso unimos un proceso moderno y exigente de purificación —rayos
+              UV, filtros multicapa y controles de laboratorio en cada lote— con la
+              paciencia artesanal de quien revisa botella por botella.
+            </p>
+            <p class="mt-5 text-base leading-relaxed text-deep-700/90">
+              Hoy acompañamos a hogares, oficinas, restaurantes y a los tenderos aliados
+              que nos abren su puerta cada semana. Con ellos aprendimos que la pureza no
+              se anuncia: se sirve fría, en la mesa, y se comprueba en el primer sorbo.
+            </p>
+
+            <!-- Cifras destacadas (✍️ reemplazar con datos reales de la empresa) -->
+            <dl class="mt-12 grid grid-cols-3 gap-6 border-t border-deep-900/10 pt-10">
+              <div>
+                <dt class="order-2 mt-2 block text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-deep-600/80">Años de historia</dt>
+                <dd class="font-display text-4xl font-semibold tracking-tight text-deep-900 sm:text-5xl"><span data-count="18">0</span><span class="text-aqua-600">+</span></dd>
+              </div>
+              <div>
+                <dt class="order-2 mt-2 block text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-deep-600/80">Litros entregados</dt>
+                <dd class="font-display text-4xl font-semibold tracking-tight text-deep-900 sm:text-5xl"><span data-count="9">0</span><span class="text-aqua-600"> M</span></dd>
+              </div>
+              <div>
+                <dt class="order-2 mt-2 block text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-deep-600/80">Tenderos y hogares</dt>
+                <dd class="font-display text-4xl font-semibold tracking-tight text-deep-900 sm:text-5xl"><span data-count="400">0</span><span class="text-aqua-600">+</span></dd>
+              </div>
+            </dl>
+          </div>
+
+          <!-- Collage de imágenes -->
+          <div class="relative lg:col-span-6 lg:pl-10" data-reveal style="transition-delay:.15s">
+            <div class="noise overflow-hidden rounded-3xl shadow-soft">
+              <!-- 📸 REEMPLAZAR: foto real de la planta / equipo de trabajo -->
+              <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1433086966358-54859d0ed716?auto=format&fit=crop&w=1200&q=80" alt="Caída de agua entre vegetación, símbolo del origen natural del agua Monte Elías" class="aspect-[4/5] w-full object-cover transition duration-700 ease-smooth hover:scale-105" />
+            </div>
+            <div class="noise absolute -bottom-10 -left-6 w-1/2 overflow-hidden rounded-3xl shadow-lift ring-8 ring-cream sm:-left-10">
+              <!-- 📸 REEMPLAZAR: foto real del reparto o del botellón en un hogar -->
+              <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=800&q=80" alt="Agua tranquila de laguna andina al atardecer" class="aspect-square w-full object-cover" />
+            </div>
+            <p class="absolute -right-2 top-8 hidden rotate-90 text-[0.6rem] font-semibold uppercase tracking-[0.4em] text-deep-600/60 lg:block" aria-hidden="true">Desde 2008</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         5. COMPROMISO AMBIENTAL — full width, parallax suave
+         ========================================================== -->
+    <section class="noise noise-strong relative overflow-hidden bg-deep-950 py-32 md:py-44" aria-label="Compromiso ambiental">
+      <!-- 📸 REEMPLAZAR: foto real de acciones ambientales de la marca -->
+      <div class="absolute inset-0 bg-cover bg-center md:bg-fixed" style="background-image:url('https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=2000&q=80')" role="img" aria-label="Bosque de niebla iluminado por el sol"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-deep-950/90 via-deep-950/70 to-deep-950" aria-hidden="true"></div>
+
+      <div class="relative z-10 mx-auto max-w-5xl px-5 text-center sm:px-8">
+        <p class="text-[0.68rem] font-semibold uppercase tracking-[0.32em] text-aqua-300" data-reveal>Compromiso ambiental</p>
+        <blockquote class="mt-8 font-display text-4xl font-semibold leading-[1.08] tracking-tight text-cream sm:text-5xl lg:text-6xl" data-reveal style="transition-delay:.1s">
+          “Cuida el medio ambiente:
+          <em class="font-light italic text-aqua-300">nuestro planeta es nuestra casa</em>.”
+        </blockquote>
+        <p class="mx-auto mt-8 max-w-2xl text-base leading-relaxed text-glacier-200" data-reveal style="transition-delay:.2s">
+          No es un eslogan: es la ruta que seguimos desde la planta hasta tu puerta.
+          Cada envase que vuelve, cada botella que se recicla y cada árbol que sembramos
+          cierran un ciclo que empezó en la montaña.
+        </p>
+
+        <div class="mt-16 grid gap-5 text-left sm:grid-cols-3">
+          <div class="rounded-2xl border border-cream/10 bg-cream/5 p-7 backdrop-blur-sm" data-reveal>
+            <h3 class="font-display text-xl font-semibold text-cream">Retornables siempre</h3>
+            <p class="mt-2.5 text-sm leading-relaxed text-glacier-200/90">El botellón vive muchas vidas: lo recogemos, lo lavamos con proceso certificado y lo devolvemos al circuito.</p>
+          </div>
+          <div class="rounded-2xl border border-cream/10 bg-cream/5 p-7 backdrop-blur-sm" data-reveal style="transition-delay:.1s">
+            <h3 class="font-display text-xl font-semibold text-cream">Reciclaje con aliados</h3>
+            <p class="mt-2.5 text-sm leading-relaxed text-glacier-200/90">Trabajamos con recuperadores locales para que el PET de nuestras botellas vuelva a ser recurso, no residuo.</p>
+          </div>
+          <div class="rounded-2xl border border-cream/10 bg-cream/5 p-7 backdrop-blur-sm" data-reveal style="transition-delay:.2s">
+            <h3 class="font-display text-xl font-semibold text-cream">Agua que siembra</h3>
+            <p class="mt-2.5 text-sm leading-relaxed text-glacier-200/90">Parte de cada pedido apoya jornadas de siembra y limpieza de fuentes hídricas en la Sabana.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         6. GALERÍA — masonry con lightbox
+         ========================================================== -->
+    <section id="galeria" class="bg-cream-50 pb-24 pt-10 md:pb-36">
+      <svg viewBox="0 0 1440 90" preserveAspectRatio="none" class="-mt-14 mb-16 block h-14 w-full fill-deep-950 md:-mt-20 md:mb-20 md:h-20" aria-hidden="true">
+        <path d="M0,0 C240,64 480,84 760,58 C1040,32 1240,30 1440,52 L1440,0 Z"/>
+      </svg>
+
+      <div class="mx-auto max-w-7xl px-5 sm:px-8">
+        <div class="flex flex-wrap items-end justify-between gap-8" data-reveal>
+          <div class="max-w-xl">
+            <p class="text-[0.68rem] font-semibold uppercase tracking-[0.32em] text-aqua-700">Galería</p>
+            <h2 class="mt-5 font-display text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl">
+              El agua, <em class="font-light italic text-aqua-700">contada</em> en imágenes
+            </h2>
+          </div>
+          <p class="max-w-sm text-sm leading-relaxed text-deep-700/80">Un recorrido visual por el origen, la planta y las mesas donde Monte Elías ya es de la familia. Toca cualquier foto para verla en grande.</p>
+        </div>
+
+        <!-- 📸 REEMPLAZAR: fotos reales de marca (origen, planta, reparto, clientes) -->
+        <div class="mt-14 columns-1 gap-6 sm:columns-2 lg:columns-3">
+          <button class="gallery-shot noise group mb-6 block w-full break-inside-avoid overflow-hidden rounded-2xl text-left" data-full="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=1600&q=85" data-caption="Amanecer en las colinas que alimentan nuestro acuífero" data-reveal>
+            <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=900&q=80" alt="Colinas entre niebla al amanecer" class="aspect-[4/5] w-full object-cover transition duration-700 ease-smooth group-hover:scale-105 group-hover:brightness-110" />
+            <span class="absolute inset-x-0 bottom-0 z-10 translate-y-3 bg-gradient-to-t from-deep-950/85 to-transparent p-5 text-sm text-cream opacity-0 transition duration-500 group-hover:translate-y-0 group-hover:opacity-100">Amanecer en las colinas que alimentan nuestro acuífero</span>
+          </button>
+          <button class="gallery-shot noise group mb-6 block w-full break-inside-avoid overflow-hidden rounded-2xl text-left" data-full="https://images.unsplash.com/photo-1433086966358-54859d0ed716?auto=format&fit=crop&w=1600&q=85" data-caption="La fuerza del agua que aprendimos a respetar" data-reveal style="transition-delay:.08s">
+            <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1433086966358-54859d0ed716?auto=format&fit=crop&w=900&q=80" alt="Cascada entre vegetación verde" class="aspect-square w-full object-cover transition duration-700 ease-smooth group-hover:scale-105 group-hover:brightness-110" />
+            <span class="absolute inset-x-0 bottom-0 z-10 translate-y-3 bg-gradient-to-t from-deep-950/85 to-transparent p-5 text-sm text-cream opacity-0 transition duration-500 group-hover:translate-y-0 group-hover:opacity-100">La fuerza del agua que aprendimos a respetar</span>
+          </button>
+          <button class="gallery-shot noise group mb-6 block w-full break-inside-avoid overflow-hidden rounded-2xl text-left" data-full="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1600&q=85" data-caption="Noches de Sabana: el silencio donde el agua descansa" data-reveal style="transition-delay:.16s">
+            <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=900&q=80" alt="Montaña nevada bajo cielo estrellado" class="aspect-[3/4] w-full object-cover transition duration-700 ease-smooth group-hover:scale-105 group-hover:brightness-110" />
+            <span class="absolute inset-x-0 bottom-0 z-10 translate-y-3 bg-gradient-to-t from-deep-950/85 to-transparent p-5 text-sm text-cream opacity-0 transition duration-500 group-hover:translate-y-0 group-hover:opacity-100">Noches de Sabana: el silencio donde el agua descansa</span>
+          </button>
+          <button class="gallery-shot noise group mb-6 block w-full break-inside-avoid overflow-hidden rounded-2xl text-left" data-full="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1600&q=85" data-caption="Agua quieta: la calma que buscamos en cada lote" data-reveal>
+            <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=900&q=80" alt="Canoa sobre laguna de aguas turquesas" class="aspect-[4/3] w-full object-cover transition duration-700 ease-smooth group-hover:scale-105 group-hover:brightness-110" />
+            <span class="absolute inset-x-0 bottom-0 z-10 translate-y-3 bg-gradient-to-t from-deep-950/85 to-transparent p-5 text-sm text-cream opacity-0 transition duration-500 group-hover:translate-y-0 group-hover:opacity-100">Agua quieta: la calma que buscamos en cada lote</span>
+          </button>
+          <button class="gallery-shot noise group mb-6 block w-full break-inside-avoid overflow-hidden rounded-2xl text-left" data-full="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1600&q=85" data-caption="Cordillera viva: nuestra reserva de futuro" data-reveal style="transition-delay:.08s">
+            <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=80" alt="Cordillera andina bajo luz dorada" class="aspect-[4/5] w-full object-cover transition duration-700 ease-smooth group-hover:scale-105 group-hover:brightness-110" />
+            <span class="absolute inset-x-0 bottom-0 z-10 translate-y-3 bg-gradient-to-t from-deep-950/85 to-transparent p-5 text-sm text-cream opacity-0 transition duration-500 group-hover:translate-y-0 group-hover:opacity-100">Cordillera viva: nuestra reserva de futuro</span>
+          </button>
+          <button class="gallery-shot noise group mb-6 block w-full break-inside-avoid overflow-hidden rounded-2xl text-left" data-full="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=85" data-caption="Orilla limpia: el compromiso que dejamos por donde pasamos" data-reveal style="transition-delay:.16s">
+            <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80" alt="Ola suave llegando a una orilla limpia" class="aspect-square w-full object-cover transition duration-700 ease-smooth group-hover:scale-105 group-hover:brightness-110" />
+            <span class="absolute inset-x-0 bottom-0 z-10 translate-y-3 bg-gradient-to-t from-deep-950/85 to-transparent p-5 text-sm text-cream opacity-0 transition duration-500 group-hover:translate-y-0 group-hover:opacity-100">Orilla limpia: el compromiso que dejamos por donde pasamos</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         7. TESTIMONIOS — sección oscura
+         ========================================================== -->
+    <section class="noise noise-soft bg-deep-900 pb-48 pt-24 md:pb-56 md:pt-36" aria-label="Testimonios de clientes">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8">
+        <div class="max-w-2xl" data-reveal>
+          <p class="text-[0.68rem] font-semibold uppercase tracking-[0.32em] text-aqua-300">Testimonios</p>
+          <h2 class="mt-5 font-display text-4xl font-semibold leading-[1.05] tracking-tight text-cream sm:text-5xl">
+            Lo que dicen <em class="font-light italic text-aqua-300">quienes ya la beben</em>
+          </h2>
+          <span class="mt-7 flex items-center gap-3" aria-hidden="true"><span class="h-px w-14 bg-sand-400"></span><span class="h-1.5 w-1.5 rounded-full bg-aqua-400"></span></span>
+        </div>
+
+        <!-- ✍️ REEMPLAZAR por testimonios reales reseñados de clientes -->
+        <div class="mt-14 grid gap-6 md:grid-cols-3 lg:gap-8">
+          <figure class="flex flex-col rounded-3xl border border-cream/10 bg-deep-800/60 p-8" data-reveal>
+            <div class="flex gap-1 text-sand-300" aria-label="Calificación: 5 de 5 estrellas">
+              <svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4" aria-hidden="true"><path d="M10 1.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8L10 14.9l-5.3 2.7 1-5.8L1.5 7.7l5.9-.9L10 1.5z"/></svg><svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4" aria-hidden="true"><path d="M10 1.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8L10 14.9l-5.3 2.7 1-5.8L1.5 7.7l5.9-.9L10 1.5z"/></svg><svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4" aria-hidden="true"><path d="M10 1.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8L10 14.9l-5.3 2.7 1-5.8L1.5 7.7l5.9-.9L10 1.5z"/></svg><svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4" aria-hidden="true"><path d="M10 1.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8L10 14.9l-5.3 2.7 1-5.8L1.5 7.7l5.9-.9L10 1.5z"/></svg><svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4" aria-hidden="true"><path d="M10 1.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8L10 14.9l-5.3 2.7 1-5.8L1.5 7.7l5.9-.9L10 1.5z"/></svg>
+            </div>
+            <blockquote class="mt-6 flex-1 text-[0.95rem] leading-relaxed text-glacier-100">“Desde que pedimos el botellón para la oficina, nadie vuelve a comprar agua por fuera. Se nota que es agua de verdad: suave, sin sabor raro, y llega puntual.”</blockquote>
+            <figcaption class="mt-7 flex items-center gap-4">
+              <span class="flex h-11 w-11 items-center justify-center rounded-full bg-aqua-500/20 font-display text-sm font-semibold text-aqua-300" aria-hidden="true">CR</span>
+              <span><span class="block text-sm font-semibold text-cream">Catalina Restrepo</span><span class="block text-xs text-glacier-300">Administradora de oficina · Bogotá</span></span>
+            </figcaption>
+          </figure>
+
+          <figure class="flex flex-col rounded-3xl border border-cream/10 bg-deep-800/60 p-8" data-reveal style="transition-delay:.1s">
+            <div class="flex gap-1 text-sand-300" aria-label="Calificación: 5 de 5 estrellas">
+              <svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4" aria-hidden="true"><path d="M10 1.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8L10 14.9l-5.3 2.7 1-5.8L1.5 7.7l5.9-.9L10 1.5z"/></svg><svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4" aria-hidden="true"><path d="M10 1.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8L10 14.9l-5.3 2.7 1-5.8L1.5 7.7l5.9-.9L10 1.5z"/></svg><svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4" aria-hidden="true"><path d="M10 1.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8L10 14.9l-5.3 2.7 1-5.8L1.5 7.7l5.9-.9L10 1.5z"/></svg><svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4" aria-hidden="true"><path d="M10 1.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8L10 14.9l-5.3 2.7 1-5.8L1.5 7.7l5.9-.9L10 1.5z"/></svg><svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4" aria-hidden="true"><path d="M10 1.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8L10 14.9l-5.3 2.7 1-5.8L1.5 7.7l5.9-.9L10 1.5z"/></svg>
+            </div>
+            <blockquote class="mt-6 flex-1 text-[0.95rem] leading-relaxed text-glacier-100">“En el restaurante servimos la de 355 con gas en la mesa y los clientes preguntan por la marca. Eso no pasa con cualquier agua: pasa con una agua bien tratada.”</blockquote>
+            <figcaption class="mt-7 flex items-center gap-4">
+              <span class="flex h-11 w-11 items-center justify-center rounded-full bg-aqua-500/20 font-display text-sm font-semibold text-aqua-300" aria-hidden="true">JS</span>
+              <span><span class="block text-sm font-semibold text-cream">Jorge Iván Suárez</span><span class="block text-xs text-glacier-300">Chef propietario · Madrid, Cund.</span></span>
+            </figcaption>
+          </figure>
+
+          <figure class="flex flex-col rounded-3xl border border-cream/10 bg-deep-800/60 p-8" data-reveal style="transition-delay:.2s">
+            <div class="flex gap-1 text-sand-300" aria-label="Calificación: 5 de 5 estrellas">
+              <svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4" aria-hidden="true"><path d="M10 1.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8L10 14.9l-5.3 2.7 1-5.8L1.5 7.7l5.9-.9L10 1.5z"/></svg><svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4" aria-hidden="true"><path d="M10 1.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8L10 14.9l-5.3 2.7 1-5.8L1.5 7.7l5.9-.9L10 1.5z"/></svg><svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4" aria-hidden="true"><path d="M10 1.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8L10 14.9l-5.3 2.7 1-5.8L1.5 7.7l5.9-.9L10 1.5z"/></svg><svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4" aria-hidden="true"><path d="M10 1.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8L10 14.9l-5.3 2.7 1-5.8L1.5 7.7l5.9-.9L10 1.5z"/></svg><svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4" aria-hidden="true"><path d="M10 1.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8L10 14.9l-5.3 2.7 1-5.8L1.5 7.7l5.9-.9L10 1.5z"/></svg>
+            </div>
+            <blockquote class="mt-6 flex-1 text-[0.95rem] leading-relaxed text-glacier-100">“Soy tendera aliada desde hace años: me dejan buen margen, me cumplen la ruta y la bolsa de 600 se me vende solita con el calor de marzo.”</blockquote>
+            <figcaption class="mt-7 flex items-center gap-4">
+              <span class="flex h-11 w-11 items-center justify-center rounded-full bg-aqua-500/20 font-display text-sm font-semibold text-aqua-300" aria-hidden="true">MP</span>
+              <span><span class="block text-sm font-semibold text-cream">Marta Ligia Pérez</span><span class="block text-xs text-glacier-300">Tendera aliada · Fontibón</span></span>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         8. CTA FINAL — pedido por WhatsApp (tarjeta superpuesta)
+         ========================================================== -->
+    <section class="bg-cream pb-24 md:pb-32">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8">
+        <div class="noise noise-strong relative -mt-28 overflow-hidden rounded-3xl bg-deep-900 px-8 py-16 shadow-lift md:-mt-36 md:px-20 md:py-24" data-reveal>
+          <!-- Anillos decorativos -->
+          <div class="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full border border-cream/10" aria-hidden="true"></div>
+          <div class="pointer-events-none absolute -right-10 -top-10 h-52 w-52 rounded-full border border-aqua-400/20" aria-hidden="true"></div>
+
+          <div class="relative z-10 grid items-center gap-10 lg:grid-cols-[1fr_auto]">
+            <div>
+              <p class="text-[0.68rem] font-semibold uppercase tracking-[0.32em] text-aqua-300">Pedidos rápidos</p>
+              <h2 class="mt-5 max-w-2xl font-display text-4xl font-semibold leading-[1.06] tracking-tight text-cream sm:text-5xl">
+                ¿Se te acabó el agua? <em class="font-light italic text-aqua-300">Estamos a un mensaje.</em>
+              </h2>
+              <p class="mt-6 max-w-xl text-base leading-relaxed text-glacier-200">
+                Escríbenos por WhatsApp con tu pedido y tu dirección: confirmamos al instante
+                y el domiciliario sale en la siguiente ruta. Así de simple se siente la pureza.
+              </p>
+            </div>
+            <div class="flex flex-col gap-4 sm:flex-row lg:flex-col">
+              <!-- ✍️ REEMPLAZAR: número real de WhatsApp (también en CONFIG.whatsapp del JS) -->
+              <a href="https://wa.me/573000000000?text=Hola%20Agua%20Monte%20El%C3%ADas%2C%20quiero%20hacer%20un%20pedido." target="_blank" rel="noopener"
+                 class="inline-flex items-center justify-center gap-3 rounded-full bg-aqua-400 px-8 py-4 text-sm font-bold text-deep-950 transition duration-300 ease-smooth hover:-translate-y-0.5 hover:bg-aqua-300 active:translate-y-0">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+                Pedir por WhatsApp
+              </a>
+              <a href="tel:+573000000000" class="inline-flex items-center justify-center gap-3 rounded-full border border-cream/25 px-8 py-4 text-sm font-semibold text-cream transition duration-300 hover:border-cream/60 hover:bg-cream/10">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.13.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.45c.9.34 1.84.57 2.8.7A2 2 0 0 1 22 16.9Z"/></svg>
+                O llámanos
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         9. CONTACTO — formulario, datos y mapa
+         ========================================================== -->
+    <section id="contacto" class="bg-cream-50 py-24 md:py-36">
+      <div class="mx-auto max-w-7xl px-5 sm:px-8">
+        <div class="grid gap-16 lg:grid-cols-2 lg:gap-20">
+
+          <!-- Datos de contacto -->
+          <div data-reveal>
+            <p class="text-[0.68rem] font-semibold uppercase tracking-[0.32em] text-aqua-700">Contacto</p>
+            <h2 class="mt-5 font-display text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl">
+              Hablemos <em class="font-light italic text-aqua-700">claro y cercano</em>
+            </h2>
+            <span class="mt-7 flex items-center gap-3" aria-hidden="true"><span class="h-px w-14 bg-sand-400"></span><span class="h-1.5 w-1.5 rounded-full bg-aqua-500"></span></span>
+            <p class="mt-7 max-w-md text-base leading-relaxed text-deep-700/90">
+              ¿Dudas sobre presentaciones, precios para tu negocio o rutas de domicilio?
+              Escríbenos: respondemos con la misma tranquilidad con la que embotellamos.
+            </p>
+
+            <!-- ✍️ REEMPLAZAR con los datos reales de contacto -->
+            <ul class="mt-10 space-y-6 text-sm">
+              <li class="flex gap-4">
+                <span class="mt-0.5 text-aqua-700"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5" aria-hidden="true"><path d="M12 21s-7-6.1-7-11a7 7 0 1 1 14 0c0 4.9-7 11-7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg></span>
+                <span><span class="block font-semibold">Planta y oficinas</span><span class="mt-1 block leading-relaxed text-deep-700/85">Madrid, Cundinamarca · entregas en Bogotá y Sabana Occidente</span></span>
+              </li>
+              <li class="flex gap-4">
+                <span class="mt-0.5 text-aqua-700"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.13.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.45c.9.34 1.84.57 2.8.7A2 2 0 0 1 22 16.9Z"/></svg></span>
+                <span><span class="block font-semibold">Teléfono y WhatsApp</span><a href="tel:+573000000000" class="mt-1 block text-deep-700/85 transition hover:text-aqua-700">+57 300 000 0000</a></span>
+              </li>
+              <li class="flex gap-4">
+                <span class="mt-0.5 text-aqua-700"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/></svg></span>
+                <span><span class="block font-semibold">Correo</span><a href="mailto:hola@aguamonteelias.com" class="mt-1 block text-deep-700/85 transition hover:text-aqua-700">hola@aguamonteelias.com</a></span>
+              </li>
+              <li class="flex gap-4">
+                <span class="mt-0.5 text-aqua-700"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg></span>
+                <span><span class="block font-semibold">Horario de domicilios</span><span class="mt-1 block leading-relaxed text-deep-700/85">Lunes a sábado, 7:00 a. m. – 5:00 p. m.</span></span>
+              </li>
+            </ul>
+
+            <div class="mt-10 flex gap-3">
+              <a href="https://www.instagram.com/aguamontelias/" target="_blank" rel="noopener" aria-label="Instagram de Agua Monte Elías" class="rounded-full border border-deep-900/15 p-3 text-deep-700 transition hover:border-aqua-600 hover:text-aqua-700">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" class="h-5 w-5" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="0.9" fill="currentColor" stroke="none"/></svg>
+              </a>
+              <a href="https://www.facebook.com/p/Agua-monte-elias-100043574390668/" target="_blank" rel="noopener" aria-label="Facebook de Agua Monte Elías" class="rounded-full border border-deep-900/15 p-3 text-deep-700 transition hover:border-aqua-600 hover:text-aqua-700">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" class="h-5 w-5" aria-hidden="true"><path d="M14 8.5h2.5V5H14a4.5 4.5 0 0 0-4.5 4.5V12H7v3.5h2.5V21H13v-5.5h2.5l.5-3.5h-3V9.7a1.2 1.2 0 0 1 1-1.2Z"/></svg>
+              </a>
+              <a href="https://wa.me/573000000000" target="_blank" rel="noopener" aria-label="WhatsApp de Agua Monte Elías" class="rounded-full border border-deep-900/15 p-3 text-deep-700 transition hover:border-aqua-600 hover:text-aqua-700">
+                <svg viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+              </a>
+            </div>
+          </div>
+
+          <!-- Formulario -->
+          <div data-reveal style="transition-delay:.12s">
+            <form id="contactForm" class="rounded-3xl bg-white p-8 shadow-card sm:p-10" novalidate>
+              <h3 class="font-display text-2xl font-semibold tracking-tight">Escríbenos un mensaje</h3>
+              <p class="mt-2 text-sm text-deep-700/80">Te respondemos en menos de un día hábil.</p>
+
+              <div class="mt-8 grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label class="label" for="nombre">Nombre completo *</label>
+                  <input class="field" id="nombre" name="nombre" type="text" autocomplete="name" placeholder="Tu nombre" required />
+                </div>
+                <div>
+                  <label class="label" for="telefono">Teléfono *</label>
+                  <input class="field" id="telefono" name="telefono" type="tel" autocomplete="tel" placeholder="300 000 0000" required />
+                </div>
+              </div>
+              <div class="mt-5">
+                <label class="label" for="correo">Correo electrónico *</label>
+                <input class="field" id="correo" name="correo" type="email" autocomplete="email" placeholder="tucorreo@ejemplo.com" required />
+              </div>
+              <div class="mt-5">
+                <label class="label" for="mensaje">Mensaje *</label>
+                <textarea class="field" id="mensaje" name="mensaje" rows="5" placeholder="Cuéntanos qué necesitas: pedido, precios para tu negocio, dudas…" required></textarea>
+              </div>
+
+              <button type="submit" class="mt-8 inline-flex w-full items-center justify-center gap-3 rounded-full bg-deep-900 px-8 py-4 text-sm font-semibold text-cream transition duration-300 ease-smooth hover:bg-deep-700 active:scale-[0.99] sm:w-auto">
+                Enviar mensaje
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+              </button>
+
+              <p id="formOk" class="mt-6 hidden rounded-2xl bg-aqua-200/40 px-5 py-4 text-sm font-medium text-aqua-700" role="status">
+                Gracias por escribirnos. Tu mensaje ya está en camino: te contactaremos muy pronto. 💧
+              </p>
+            </form>
+          </div>
+        </div>
+
+        <!-- Mapa -->
+        <div class="noise mt-20 overflow-hidden rounded-3xl shadow-card" data-reveal>
+          <iframe title="Mapa de ubicación de Agua Monte Elías, Madrid, Cundinamarca"
+                  src="https://www.google.com/maps?q=Madrid%2C%20Cundinamarca%2C%20Colombia&output=embed"
+                  class="h-[380px] w-full border-0" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================
+       10. FOOTER — oscuro, con ondas, enlaces y créditos
+       ========================================================== -->
+  <footer class="noise noise-soft bg-deep-950 pt-10 text-glacier-200">
+    <svg viewBox="0 0 1440 90" preserveAspectRatio="none" class="-mt-14 mb-14 block h-14 w-full fill-cream-50 md:-mt-20 md:mb-16 md:h-20" aria-hidden="true">
+      <path d="M0,0 C220,72 500,88 780,60 C1060,32 1260,28 1440,50 L1440,0 Z"/>
+    </svg>
+
+    <div class="mx-auto max-w-7xl px-5 pb-10 sm:px-8">
+      <div class="grid gap-12 lg:grid-cols-12">
+        <div class="lg:col-span-5">
+          <a href="#inicio" class="flex items-center gap-3" aria-label="Agua Monte Elías — inicio">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="h-9 w-9 text-aqua-400" aria-hidden="true"><path d="M16 3.5c5.2 6.6 8.6 11 8.6 15.4a8.6 8.6 0 1 1-17.2 0C7.4 14.5 10.8 10.1 16 3.5Z"/><path d="M10.8 20.2l3.6-4.6 2.7 3.2 4.3-5.1"/></svg>
+            <span class="font-display text-2xl font-semibold tracking-tight text-cream">Monte Elías</span>
+          </a>
+          <p class="mt-6 max-w-sm text-sm leading-relaxed">
+            Agua Monte Elías, purifica tu cuerpo. Agua potable tratada de excelente
+            calidad, 100% natural, embotellada en Madrid, Cundinamarca para toda Colombia.
+          </p>
+          <p class="mt-6 text-[0.65rem] font-semibold uppercase tracking-[0.28em] text-aqua-300">Nuestro planeta es nuestra casa</p>
+        </div>
+
+        <nav class="lg:col-span-2" aria-label="Enlaces del sitio">
+          <h3 class="text-[0.65rem] font-bold uppercase tracking-[0.26em] text-cream">Explorar</h3>
+          <ul class="mt-5 space-y-3 text-sm">
+            <li><a href="#inicio" class="transition hover:text-aqua-300">Inicio</a></li>
+            <li><a href="#nosotros" class="transition hover:text-aqua-300">Nosotros</a></li>
+            <li><a href="#productos" class="transition hover:text-aqua-300">Productos</a></li>
+            <li><a href="#galeria" class="transition hover:text-aqua-300">Galería</a></li>
+            <li><a href="#contacto" class="transition hover:text-aqua-300">Contacto</a></li>
+          </ul>
+        </nav>
+
+        <nav class="lg:col-span-2" aria-label="Presentaciones">
+          <h3 class="text-[0.65rem] font-bold uppercase tracking-[0.26em] text-cream">Productos</h3>
+          <ul class="mt-5 space-y-3 text-sm">
+            <li><a href="#productos" class="transition hover:text-aqua-300">Botellón 5 galones</a></li>
+            <li><a href="#productos" class="transition hover:text-aqua-300">Botellas 355 ml – 5 L</a></li>
+            <li><a href="#productos" class="transition hover:text-aqua-300">Bolsas 300 ml – 6 L</a></li>
+            <li><a href="#productos" class="transition hover:text-aqua-300">Línea con gas</a></li>
+          </ul>
+        </nav>
+
+        <div class="lg:col-span-3">
+          <h3 class="text-[0.65rem] font-bold uppercase tracking-[0.26em] text-cream">Contacto</h3>
+          <ul class="mt-5 space-y-3 text-sm">
+            <li>Madrid, Cundinamarca · Bogotá y Sabana</li>
+            <li><a href="tel:+573000000000" class="transition hover:text-aqua-300">+57 300 000 0000</a></li>
+            <li><a href="mailto:hola@aguamonteelias.com" class="transition hover:text-aqua-300">hola@aguamonteelias.com</a></li>
+            <li>Lun – Sáb · 7:00 a. m. a 5:00 p. m.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-14 flex flex-col items-center justify-between gap-4 border-t border-cream/10 pt-8 text-xs text-glacier-300/80 sm:flex-row">
+        <p>© <span id="year">2026</span> Agua Monte Elías. Todos los derechos reservados.</p>
+        <p>Hecho con agua, montaña y paciencia en Colombia 🇨</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================
+       CARRITO LATERAL (drawer)
+       ========================================================== -->
+  <div id="cartOverlay" class="pointer-events-none fixed inset-0 z-[60] bg-deep-950/60 opacity-0 transition-opacity duration-500" aria-hidden="true"></div>
+  <aside id="cartDrawer" class="fixed inset-y-0 right-0 z-[61] flex h-full w-full max-w-md translate-x-full flex-col bg-cream shadow-lift transition-transform duration-500 ease-smooth" aria-label="Carrito de compras" aria-hidden="true">
+    <div class="flex items-center justify-between border-b border-deep-900/10 px-7 py-6">
+      <h2 class="font-display text-2xl font-semibold tracking-tight">Tu pedido</h2>
+      <button id="cartClose" class="rounded-full border border-deep-900/15 p-2.5 text-deep-800 transition hover:bg-deep-900/5" aria-label="Cerrar carrito">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" class="h-5 w-5" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+
+    <div id="cartItems" class="flex-1 overflow-y-auto px-7"></div>
+
+    <div class="border-t border-deep-900/10 px-7 py-6">
+      <div class="flex items-baseline justify-between">
+        <span class="text-sm font-semibold uppercase tracking-[0.18em] text-deep-700/80">Subtotal</span>
+        <span id="cartSubtotal" class="font-display text-2xl font-semibold">$ 0</span>
+      </div>
+      <p class="mt-2 text-xs text-deep-700/70">Envío confirmado al cerrar tu pedido por WhatsApp.</p>
+      <!-- ✍️ En WooCommerce: enlazar a /finalizar-compra en lugar de WhatsApp -->
+      <button id="checkoutBtn" class="mt-5 inline-flex w-full items-center justify-center gap-3 rounded-full bg-aqua-500 px-8 py-4 text-sm font-bold text-deep-950 transition duration-300 ease-smooth hover:bg-aqua-400 active:scale-[0.99]">
+        Finalizar pedido por WhatsApp
+      </button>
+      <button id="keepShopping" class="mt-3 w-full rounded-full px-8 py-3 text-sm font-medium text-deep-700 transition hover:text-deep-950">Seguir comprando</button>
+    </div>
+  </aside>
+
+  <!-- ==========================================================
+       LIGHTBOX DE GALERÍA
+       ========================================================== -->
+  <div id="lightbox" class="fixed inset-0 z-[70] hidden items-center justify-center bg-deep-950/95 p-4 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Visor de galería">
+    <button id="lbClose" class="absolute right-5 top-5 rounded-full border border-cream/20 p-3 text-cream transition hover:bg-cream/10" aria-label="Cerrar imagen">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" class="h-5 w-5" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <button id="lbPrev" class="absolute left-3 top-1/2 -translate-y-1/2 rounded-full border border-cream/20 p-3 text-cream transition hover:bg-cream/10 sm:left-8" aria-label="Imagen anterior">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>
+    </button>
+    <button id="lbNext" class="absolute right-3 top-1/2 -translate-y-1/2 rounded-full border border-cream/20 p-3 text-cream transition hover:bg-cream/10 sm:right-8" aria-label="Imagen siguiente">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+    </button>
+    <figure class="max-w-5xl">
+      <img id="lbImg" src="" alt="" class="noise mx-auto max-h-[78vh] w-auto rounded-2xl object-contain shadow-lift" />
+      <figcaption id="lbCap" class="mt-5 text-center text-sm text-glacier-200"></figcaption>
+    </figure>
+  </div>
+
+  <!-- ==========================================================
+       JAVASCRIPT — interacciones, carrito, filtros, lightbox
+       ========================================================== -->
+  <script>
+    (() => {
+      'use strict';
+      const $  = (s, c = document) => c.querySelector(s);
+      const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
+
+      /* ✍️ CONFIG: reemplaza el número real de WhatsApp de la marca */
+      const CONFIG = { whatsapp: '573000000000' };
+      const COP = v => new Intl.NumberFormat('es-CO', { style:'currency', currency:'COP', maximumFractionDigits:0 }).format(v);
+
+      /* ---------- 1. Header: estado al hacer scroll ---------- */
+      const header = $('#site-header');
+      const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 40);
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive: true });
+
+      /* ---------- 2. Bloqueo de scroll con overlays abiertos ---------- */
+      const lockScroll = () => {
+        const open = !$('#cartDrawer').classList.contains('translate-x-full')
+                  || !$('#mobileMenu').classList.contains('translate-x-full')
+                  || !$('#lightbox').classList.contains('hidden');
+        document.body.classList.toggle('overflow-hidden', open);
+      };
+
+      /* ---------- 3. Menú móvil ---------- */
+      const menu = $('#mobileMenu'), menuOverlay = $('#menuOverlay');
+      const setMenu = open => {
+        menu.classList.toggle('translate-x-full', !open);
+        menuOverlay.classList.toggle('opacity-0', !open);
+        menuOverlay.classList.toggle('pointer-events-none', !open);
+        $('#menuBtn').setAttribute('aria-expanded', String(open));
+        lockScroll();
+      };
+      $('#menuBtn').addEventListener('click', () => setMenu(true));
+      $('#menuClose').addEventListener('click', () => setMenu(false));
+      menuOverlay.addEventListener('click', () => setMenu(false));
+      $$('.mobile-link').forEach(a => a.addEventListener('click', () => setMenu(false)));
+
+      /* ---------- 4. Animaciones de entrada (IntersectionObserver) ---------- */
+      const io = new IntersectionObserver(entries => entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); }
+      }), { threshold: .12, rootMargin: '0px 0px -60px 0px' });
+      $$('[data-reveal]').forEach(el => io.observe(el));
+
+      /* ---------- 5. Contadores animados de "Nosotros" ---------- */
+      const cio = new IntersectionObserver(entries => entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        cio.unobserve(e.target);
+        const el = e.target, end = +el.dataset.count, t0 = performance.now(), dur = 1600;
+        const tick = t => {
+          const p = Math.min((t - t0) / dur, 1), eased = 1 - Math.pow(1 - p, 3);
+          el.textContent = Math.round(end * eased);
+          if (p < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }), { threshold: .6 });
+      $$('[data-count]').forEach(el => cio.observe(el));
+
+      /* ---------- 6. Pestañas de filtrado de productos ---------- */
+      const tabs = $$('.tab-btn'), cards = $$('.product-card');
+      tabs.forEach(btn => btn.addEventListener('click', () => {
+        tabs.forEach(b => { b.classList.toggle('is-active', b === btn); b.setAttribute('aria-pressed', String(b === btn)); });
+        const f = btn.dataset.filter;
+        cards.forEach(c => {
+          const show = f === 'todas' || c.dataset.cat === f;
+          c.classList.toggle('hidden', !show);
+          if (show) { c.classList.remove('pop-in'); void c.offsetWidth; c.classList.add('pop-in'); }
+        });
+      }));
+
+      /* ---------- 7. Selectores de cantidad en tarjetas ---------- */
+      $('#productsGrid').addEventListener('click', e => {
+        const inc = e.target.closest('[data-inc]'), dec = e.target.closest('[data-dec]');
+        if (!inc && !dec) return;
+        const qty = (inc || dec).closest('.product-card').querySelector('.qty');
+        qty.textContent = Math.min(20, Math.max(1, +qty.textContent + (inc ? 1 : -1)));
+      });
+
+      /* ---------- 8. Carrito (drawer) ---------- */
+      const cart = new Map(); // id -> { name, price, img, qty }
+      const drawer = $('#cartDrawer'), drawerOverlay = $('#cartOverlay'),
+            itemsEl = $('#cartItems'), subtotalEl = $('#cartSubtotal'), countEl = $('#cartCount');
+
+      const setDrawer = open => {
+        drawer.classList.toggle('translate-x-full', !open);
+        drawerOverlay.classList.toggle('opacity-0', !open);
+        drawerOverlay.classList.toggle('pointer-events-none', !open);
+        drawer.setAttribute('aria-hidden', String(!open));
+        lockScroll();
+      };
+      $('#cartBtn').addEventListener('click', () => setDrawer(true));
+      $('#cartClose').addEventListener('click', () => setDrawer(false));
+      $('#keepShopping').addEventListener('click', () => setDrawer(false));
+      drawerOverlay.addEventListener('click', () => setDrawer(false));
+
+      const cartTotal = () => [...cart.values()].reduce((a, i) => a + i.price * i.qty, 0);
+
+      function renderCart() {
+        const entries = [...cart.entries()];
+        const count = entries.reduce((a, [, i]) => a + i.qty, 0);
+        countEl.textContent = count;
+        countEl.classList.toggle('hidden', count === 0);
+        countEl.classList.remove('badge-pop'); void countEl.offsetWidth; countEl.classList.add('badge-pop');
+
+        if (!entries.length) {
+          itemsEl.innerHTML = `
+            <div class="flex h-full flex-col items-center justify-center gap-4 py-16 text-center">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" class="h-12 w-12 text-deep-900/25" aria-hidden="true"><path d="M6 7h12l1.2 13H4.8L6 7Z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg>
+              <p class="font-display text-xl font-semibold">Tu carrito está vacío</p>
+              <p class="max-w-[22ch] text-sm text-deep-700/75">Agrega tu presentación favorita y llega a tu puerta el mismo día.</p>
+            </div>`;
+        } else {
+          itemsEl.innerHTML = entries.map(([id, i]) => `
+            <div class="flex gap-4 border-b border-deep-900/10 py-5">
+              <img src="${i.img}" alt="" loading="lazy" class="h-24 w-20 rounded-xl object-cover" />
+              <div class="flex-1">
+                <div class="flex items-start justify-between gap-3">
+                  <h4 class="font-display text-lg font-semibold leading-snug">${i.name}</h4>
+                  <button data-remove="${id}" class="rounded-full p-1 text-deep-700/60 transition hover:text-deep-950" aria-label="Quitar ${i.name} del carrito">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" class="h-4 w-4" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+                  </button>
+                </div>
+                <p class="mt-0.5 text-xs text-deep-700/70">${COP(i.price)} c/u</p>
+                <div class="mt-3 flex items-center justify-between">
+                  <div class="flex items-center rounded-full border border-deep-900/15">
+                    <button data-cart-dec="${id}" class="px-2.5 py-1.5 text-deep-700 transition hover:text-deep-950" aria-label="Disminuir">−</button>
+                    <span class="w-6 text-center text-sm font-semibold">${i.qty}</span>
+                    <button data-cart-inc="${id}" class="px-2.5 py-1.5 text-deep-700 transition hover:text-deep-950" aria-label="Aumentar">+</button>
+                  </div>
+                  <span class="text-sm font-semibold">${COP(i.price * i.qty)}</span>
+                </div>
+              </div>
+            </div>`).join('');
+        }
+        subtotalEl.textContent = COP(cartTotal());
+      }
+      renderCart();
+
+      /* Agregar desde tarjetas */
+      $$('[data-add]').forEach(btn => btn.addEventListener('click', () => {
+        const card = btn.closest('.product-card'), id = card.dataset.id;
+        const item = cart.get(id) || { name: card.dataset.name, price: +card.dataset.price, img: card.dataset.img, qty: 0 };
+        item.qty += +card.querySelector('.qty').textContent;
+        cart.set(id, item);
+        card.querySelector('.qty').textContent = '1';
+        renderCart();
+        setDrawer(true);
+      }));
+
+      /* Controles dentro del drawer */
+      itemsEl.addEventListener('click', e => {
+        const b = e.target.closest('button'); if (!b) return;
+        if (b.dataset.cartInc) cart.get(b.dataset.cartInc).qty = Math.min(99, cart.get(b.dataset.cartInc).qty + 1);
+        if (b.dataset.cartDec) { const it = cart.get(b.dataset.cartDec); it.qty -= 1; if (it.qty < 1) cart.delete(b.dataset.cartDec); }
+        if (b.dataset.remove)  cart.delete(b.dataset.remove);
+        renderCart();
+      });
+
+      /* Checkout: arma el pedido como mensaje de WhatsApp.
+         ✍️ En WooCommerce, reemplazar por envío del carrito real al checkout. */
+      $('#checkoutBtn').addEventListener('click', () => {
+        if (!cart.size) return;
+        const lines = [...cart.values()].map(i => `• ${i.qty} × ${i.name} (${COP(i.price * i.qty)})`).join('\n');
+        const msg = `Hola Agua Monte Elías 💧 quiero pedir:\n${lines}\nSubtotal: ${COP(cartTotal())}`;
+        window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
+      });
+
+      /* ---------- 9. Lightbox de galería ---------- */
+      const shots = $$('.gallery-shot').map(b => ({ src: b.dataset.full, cap: b.dataset.caption }));
+      const lb = $('#lightbox'), lbImg = $('#lbImg'), lbCap = $('#lbCap');
+      let li = 0;
+      const showLb = i => {
+        li = (i + shots.length) % shots.length;
+        lbImg.src = shots[li].src; lbImg.alt = shots[li].cap;
+        lbCap.textContent = `${li + 1} / ${shots.length} — ${shots[li].cap}`;
+      };
+      const setLb = open => { lb.classList.toggle('hidden', !open); lb.classList.toggle('flex', open); lockScroll(); };
+      $$('.gallery-shot').forEach((b, i) => b.addEventListener('click', () => { showLb(i); setLb(true); }));
+      $('#lbClose').addEventListener('click', () => setLb(false));
+      $('#lbPrev').addEventListener('click', () => showLb(li - 1));
+      $('#lbNext').addEventListener('click', () => showLb(li + 1));
+      lb.addEventListener('click', e => { if (e.target === lb) setLb(false); });
+
+      /* ---------- 10. Tecla Escape cierra todo ---------- */
+      document.addEventListener('keydown', e => {
+        if (e.key !== 'Escape') return;
+        setLb(false); setDrawer(false); setMenu(false);
+      });
+
+      /* ---------- 11. Formulario de contacto ---------- */
+      $('#contactForm').addEventListener('submit', e => {
+        e.preventDefault();
+        const f = e.target;
+        if (!f.checkValidity()) { f.reportValidity(); return; }
+        $('#formOk').classList.remove('hidden');
+        f.reset();
+        /* ✍️ Conectar aquí con WPForms/Contact Form 7 o endpoint propio */
+      });
+
+      /* ---------- 12. Año dinámico ---------- */
+      $('#year').textContent = new Date().getFullYear();
+    })();
+  </script>
+</body>
+</html>
